@@ -62,3 +62,17 @@ fatal: unable to access 'https://github.com/ezrealcong/AI_experiment.git/': Fail
 则输入：git config --global --unset http.proxy
 ```
 
+# 4. 以后使用注意
+
+1. pull之前最好先把自己本地的修改add->commit到本地仓库
+2. 每次要往远程仓库push新的修改时，先pull一下，看看有什么冲突
+   - 若有冲突，先解决冲突再重新add->commit->push
+     - 解决冲突的方法见上方介绍的一些网页
+   - 没用冲突直接push即可
+
+# 5. 一些可能遇到的问题
+
+1. 首次连接远程仓库可能会要求填写username或者password，有的时候提示Github不再支持用密码登录（如图），这个时候需要使用Github生成的Token来登录，操作方法详见此文章：https://blog.csdn.net/GaoJHIT/article/details/119450935![image-20230524155549308](git上手.assets/image-20230524155549308.png)
+
+   
+
