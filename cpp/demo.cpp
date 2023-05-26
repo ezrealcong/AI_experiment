@@ -28,7 +28,7 @@ int main(){
     fp = generateFuncObj(funToRun[i]); 
     printf("F %d value = %1.20E\n", fp->getID(), fp->compute(X));
     gettimeofday(&start, NULL);
-    for (unsigned j=0; j < run; j++){
+    /*for (unsigned j=0; j < run; j++){
       fp->compute(X);
     }
     gettimeofday(&end, NULL);
@@ -39,7 +39,7 @@ int main(){
     mtime = (((seconds) * 1000 + useconds/1000.0) + 0.5)/1000;
 
     runTimeVec.push_back(mtime);
-    printf ( "F %d, Running Time = %f s\n\n", fp->getID(), mtime);
+    printf ( "F %d, Running Time = %f s\n\n", fp->getID(), mtime);*/
     
     delete fp;
   }

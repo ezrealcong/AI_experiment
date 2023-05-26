@@ -64,4 +64,4 @@ F15.o: F15.h Benchmarks.h F15.cpp
 
 .PHONY : clean
 clean:
-	rm -f demo $(OBJECTS)
+	-rm -f demo $(OBJECTS)
