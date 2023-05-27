@@ -1,16 +1,31 @@
 #include "Header.h"
+#include"GA.h"
 #include <sys/time.h>
 #include <cstdio>
 #include <unistd.h>
 
-int main(){
-  /*  Test the basic benchmark function */
+
+int main()
+{
+
+  //参数依次为：函数编号、交叉概率、变异概率、迭代次数
+  GeneticAlgorithm GA=GeneticAlgorithm(15,0.9,0.001,20);
+  GA.run();
+
+  return 0;
+}
+
+
+//以下为之前的demo代码
+
+/*int main(){
+  //  Test the basic benchmark function 
   double* X;
   Benchmarks* fp=NULL;
   unsigned dim = 1000;
   unsigned funToRun[] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
-  // unsigned funToRun[] = {1};
-  // unsigned funToRun[] = {15};
+  unsigned funToRun[] = {1};
+  unsigned funToRun[] = {15};
   unsigned funNum = 15;
   unsigned run = 1;
 
@@ -93,3 +108,4 @@ Benchmarks* generateFuncObj(int funcID){
   }
   return fp;
 }
+*/
