@@ -1,4 +1,4 @@
 /source/tmp
 /.vscode
-*.exe
-*.out
+source/*.exe
+source/*.out
