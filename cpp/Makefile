@@ -2,20 +2,23 @@ CC=g++
 # CXXFLAGS=-Wall -pedantic -std=c++11 -O3
 CXXFLAGS=-Wall -pedantic -std=c++0x  -ggdb -DDEBUG
 
-OBJECTS=demo.o  Benchmarks.o \
+OBJECTS=demo.o  Benchmarks.o GA.o\
 F1.o F2.o F3.o F4.o F5.o F6.o F7.o F8.o F9.o F10.o\
 F11.o F12.o F13.o F14.o F15.o 
 
 demo: 	$(OBJECTS)
 	$(CC) $(CXXFLAGS) -o demo $(OBJECTS)
 
-demo.o: demo.cpp Header.h  Benchmarks.h \
+demo.o: demo.cpp Header.h  Benchmarks.h  GA.h\
 F1.h F2.h F3.h F4.h F5.h F6.h F7.h F8.h F9.h F10.h\
 F11.h F12.h F13.h F14.h F15.h 
 	$(CC) $(CXXFLAGS) -c demo.cpp 
 
 Benchmarks.o:  Benchmarks.h Benchmarks.cpp
 	$(CC) $(CXXFLAGS) -c Benchmarks.cpp
+
+GA.o: GA.h GA.cpp
+	$(CC) $(CXXFLAGS) -c GA.cpp
 
 F1.o: F1.h Benchmarks.h F1.cpp
 	$(CC) $(CXXFLAGS) -c F1.cpp

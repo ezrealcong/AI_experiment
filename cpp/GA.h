@@ -38,8 +38,9 @@ using namespace std;
 class GeneticAlgorithm
 {
 private:
-    static constexpr int Population_size=100;
+    static constexpr int Population_size=50;
     static constexpr int Dimension=1000;
+    int x_max,x_min;
 
     int Iteration_times;
     int Iteration_terminate_times=100;
@@ -49,151 +50,27 @@ private:
 
     double Cross_rate;
     double Mutation_rate;
-    double Iteration_terminate_fit;
-    
+    double best_fitness;
+    double* best_idividual;
+
+
     vector<double*> Population;
     vector<double> fitness;
+    vector<int> index;
+    vector<double> temp;
     
     void init_population();
-    void cal_fitness();
+    void compute_fitness();
     double* select();
+    double* Individuals_Copy();
     double* cross();
     double* mutation();
+    void Iterative_Evolution();
 
     
 public:
-    GeneticAlgorithm(int function_id, double Cross_rate, double Mutation_rate, double Iteration_terminate_fit);
+    GeneticAlgorithm(int, double , double , int);
     ~GeneticAlgorithm();
+
+    void run();
 };
-
-GeneticAlgorithm::GeneticAlgorithm(int function_id, double Cross_rate, double Mutation_rate, double Iteration_terminate_fit)
-{
-    this->function_id=function_id;
-    this->Cross_rate=Cross_rate;
-    this->Mutation_rate=Mutation_rate;
-    this->Iteration_terminate_fit=Iteration_terminate_fit;
-    this->Iteration_times=0;
-
-    if (function_id==1){
-        fp = new F1();
-    }else if (function_id==2){
-        fp = new F2();
-    }else if (function_id==3){
-        fp = new F3();
-    }else if (function_id==4){
-        fp = new F4();
-    }else if (function_id==5){
-        fp = new F5();
-    }else if (function_id==6){
-        fp = new F6();
-    }else if (function_id==7){
-        fp = new F7();
-    }else if (function_id==8){
-        fp = new F8();
-    }else if (function_id==9){
-        fp = new F9();
-    }else if (function_id==10){
-        fp = new F10();
-    }else if (function_id==11){
-        fp = new F11();
-    }else if (function_id==12){
-        fp = new F12();
-    }else if (function_id==13){
-        fp = new F13();
-    }else if (function_id==14){
-        fp = new F14();
-    }else if (function_id==15){
-        fp = new F15();
-    }
-    init_population();
-}
-
-GeneticAlgorithm::~GeneticAlgorithm()
-{
-    delete fp;
-}
-
-void GeneticAlgorithm::init_population()
-{
-    Population=vector<double*>(Population_size);
-    for(int i=0;i<Population_size;i++){
-        Population[i]=new double[Dimension];
-        for(int j=0;j<Dimension;j++){
-            Population[i][j]=rand()/(RAND_MAX+1.0)*200-100;
-        }
-    }
-       
-}
-
-void GeneticAlgorithm::cal_fitness()
-{
-    fitness=vector<double>(Population_size);
-    for(int i=0;i<Population_size;i++){
-        fitness[i]=fp->compute(Population[i]);
-    }
-}
-
-double* GeneticAlgorithm::select()
-{
-    vector<int> index(Population_size);
-    iota(index.begin(),index.end(),0);
-
-    sort(index.begin(),index.end(),[&](int a, int b){return fitness[a]>fitness[b];});
-    vector<int> temp(Population_size);
-
-    for(int i=0;i<Population_size;++i){
-        temp[index[i]]=i+1;
-    }
-    random_device seed;
-	ranlux48 engine(seed());
-    uniform_int_distribution<> distrib(1, 500500);
-    
-    int r1=distrib(engine);
-    int sum=0,p=0;
-    while(sum<r1){
-        sum+=temp[p++];
-    }
-    return Population[p];
-    
-}
-
-double* GeneticAlgorithm::cross()
-{
-    double*f1=select();
-    double*f2=select();
-    double*child=new double[Dimension];
-
-    random_device seed;
-	ranlux48 engine(seed());
-    uniform_int_distribution<> distrib(0, 1);
-
-    for(int i=0;i<Dimension;i++){
-        if(distrib(engine)==0){
-            child[i]=f1[i];
-        }else{
-            child[i]=f2[i];
-        }
-    }
-    return child;
-
-}
-
-double* GeneticAlgorithm::mutation()
-{
-    double*f=select();
-    double*child=new double[Dimension];
-
-    random_device seed;
-    ranlux48 engine(seed());
-    uniform_int_distribution<> distrib(0, 1);
-    uniform_real_distribution<> distrib2(-100, 100);
-
-    for(int i=0;i<Dimension;i++){
-        if(distrib(engine)==0){
-            child[i]=distrib2(engine);
-        }else{
-            child[i]=f[i];
-        }
-    }
-    return child;
-}

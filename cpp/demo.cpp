@@ -1,16 +1,31 @@
 #include "Header.h"
+#include"GA.h"
 #include <sys/time.h>
 #include <cstdio>
 #include <unistd.h>
 
-int main(){
-  /*  Test the basic benchmark function */
+
+int main()
+{
+
+  //参数依次为：函数编号、交叉概率、变异概率、迭代次数
+  GeneticAlgorithm GA=GeneticAlgorithm(15,0.9,0.001,20);
+  GA.run();
+
+  return 0;
+}
+
+
+//以下为之前的demo代码
+
+/*int main(){
+  //  Test the basic benchmark function 
   double* X;
   Benchmarks* fp=NULL;
   unsigned dim = 1000;
   unsigned funToRun[] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
-  // unsigned funToRun[] = {1};
-  // unsigned funToRun[] = {15};
+  unsigned funToRun[] = {1};
+  unsigned funToRun[] = {15};
   unsigned funNum = 15;
   unsigned run = 1;
 
@@ -28,7 +43,7 @@ int main(){
     fp = generateFuncObj(funToRun[i]); 
     printf("F %d value = %1.20E\n", fp->getID(), fp->compute(X));
     gettimeofday(&start, NULL);
-    /*for (unsigned j=0; j < run; j++){
+    for (unsigned j=0; j < run; j++){
       fp->compute(X);
     }
     gettimeofday(&end, NULL);
@@ -39,7 +54,7 @@ int main(){
     mtime = (((seconds) * 1000 + useconds/1000.0) + 0.5)/1000;
 
     runTimeVec.push_back(mtime);
-    printf ( "F %d, Running Time = %f s\n\n", fp->getID(), mtime);*/
+    printf ( "F %d, Running Time = %f s\n\n", fp->getID(), mtime);
     
     delete fp;
   }
@@ -93,3 +108,4 @@ Benchmarks* generateFuncObj(int funcID){
   }
   return fp;
 }
+*/
