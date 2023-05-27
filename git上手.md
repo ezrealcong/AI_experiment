@@ -74,5 +74,12 @@ fatal: unable to access 'https://github.com/ezrealcong/AI_experiment.git/': Fail
 
 1. 首次连接远程仓库可能会要求填写username或者password，有的时候提示Github不再支持用密码登录（如图），这个时候需要使用Github生成的Token来登录，操作方法详见此文章：https://blog.csdn.net/GaoJHIT/article/details/119450935![image-20230524155549308](git上手.assets/image-20230524155549308.png)
 
+1. 
+
    
 
+# 6. gitignore使用
+
+[如何使用 .gitignore 文件 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/612743735)
+
+[[Git\].gitignore文件的配置使用 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/52885189)

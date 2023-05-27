@@ -9,7 +9,7 @@ int main()
 {
 
   //参数依次为：函数编号、交叉概率、变异概率、迭代次数
-  GeneticAlgorithm GA=GeneticAlgorithm(15,0.9,0.001,20);
+  GeneticAlgorithm GA=GeneticAlgorithm(10,0.9,0.001,20);
   GA.run();
 
   return 0;
