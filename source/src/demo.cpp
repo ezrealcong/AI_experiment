@@ -1,5 +1,6 @@
 #include "../include/Header.h"
 #include"../include/GA.h"
+#include"../include/DE.h"
 #include"../include/config.h"
 #include <sys/time.h>
 #include <cstdio>
@@ -8,7 +9,7 @@
 #ifdef RUN_ALL  //每个人给自己开发的进化算法定一个宏，加到这里
     #define __GA__
     #define __PSO__
-    #define __DE__
+    #define __DE__=true
     #define __CC__
     
 #endif
@@ -45,7 +46,8 @@ int main()
 
 /*----------------------- DE算法调用-----------------------------*/
 #ifdef __DE__
-
+  DE de=DE(1,vector<int>(),0,50,1000,0.8,0.5,100);
+  de.run();
 #endif
 /*----------------------- DE算法调用结束--------------------------*/
 
