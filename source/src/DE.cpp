@@ -27,7 +27,7 @@ double target_func(double x, double y) {
         random_device rd;
         mt19937 gen(rd());
         uniform_real_distribution<> dis(min_value, max_value);
-        for (int i = 0; i < genes.size(); i++) {
+        for (int i = 0; i < (int)genes.size(); i++) {
             genes[i] = dis(gen);
         }
     }
@@ -68,7 +68,7 @@ double target_func(double x, double y) {
         mt19937 gen(rd());
         uniform_real_distribution<> dis(0.0, 1.0);
         int j_rand = rand() % indexList.size();
-        for (int j = 0; j < indexList.size(); j++) {
+        for (int j = 0; j < (int)indexList.size(); j++) {
             if (dis(gen) < CR || j == j_rand) {
                 genes[indexList[j]] = parent.genes[indexList[j]];
             }
@@ -178,9 +178,9 @@ void DE::run(){
     double past_fitness= best_fitness;
     int best_index = 0;
     
-    double threhold=0;
+    double threhold=best_fitness;
     int sequence=0;
-
+    //挑出随机初始的群中最优的解
     for(int i=0;i<pop_size;i++){
         if (population[i].fitness<=best_fitness){
                 best_fitness=population[i].fitness;
@@ -190,7 +190,7 @@ void DE::run(){
 
     past_fitness=best_fitness;
 
-
+    //优化
     while (iter < max_iter) {
         for (int i = 0; i < pop_size; i++) {
             Individual mutant(fp,indexList,gene_size,max_value,min_value);
@@ -206,7 +206,7 @@ void DE::run(){
                     population[i] = mutant;
                 }
             }
-
+            //优化后的适应值小于最好的，存储
             if (population[i].fitness<=best_fitness){
                 best_fitness=population[i].fitness;
                 best_index=i;
@@ -214,6 +214,8 @@ void DE::run(){
 
         }
         iter++;
+
+
 
         if(past_fitness-best_fitness<=threhold){
             sequence=(sequence+1)%S.size();
@@ -240,7 +242,7 @@ void DE::run(){
                         vector<int> tmpS(S);
                         S.clear();
 
-                        for(int i=0;i<tmpS.size();i+=2){
+                        for(int i=0;i<(int)tmpS.size();i+=2){
                             S.push_back(tmpS[i]+tmpS[i+1]);
                         }
                         if(tmpS.size()%2 !=0){
@@ -272,9 +274,11 @@ void DE::run(){
 
         //这里加入一个当适应值上升不了后，则对小组进行调换。
     }
+
+
     // 输出最优解
-    double best_fitness = population[0].fitness;
-    int best_index = 0;
+    best_fitness = population[0].fitness;
+    best_index = 0;
     for (int i = 1; i < pop_size; i++) {
         if (population[i].fitness < best_fitness) {
             best_fitness = population[i].fitness;
@@ -282,8 +286,13 @@ void DE::run(){
         }
     }
 
-    cout << "Best solution: (" << population[best_index].genes[0] << ", " << population[best_index].genes[1] << ")" << endl;
-    cout << "Best fitness: " << best_fitness << endl;
+
+    for(int i=0;i<gene_size;i++){
+        cout<<population[best_index].genes[i];
+    }
+    cout<endl;
+    population[best_index].calc_fitness();
+    cout << "Best fitness: " << (int)population[best_index].fitness<< endl;
 }
 
 
