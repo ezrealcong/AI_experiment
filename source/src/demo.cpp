@@ -6,6 +6,9 @@
 #include <cstdio>
 #include <unistd.h>
 
+#include <vector>
+#include <ctime>
+
 #ifdef RUN_ALL  //每个人给自己开发的进化算法定一个宏，加到这里
     #define __GA__
     #define __PSO__
@@ -46,8 +49,17 @@ int main()
 
 /*----------------------- DE算法调用-----------------------------*/
 #ifdef __DE__
-  DE de=DE(1,vector<int>(),0,100,1000,0.8,0.5,100);
+  clock_t start,end;
+
+
+  DE de=DE(1,vector<int>(),0,100,1000,0.6,0.8,150);
+  
+  start=time(0);
   de.run();
+  end=time(0);
+
+  cout<<"总时间"<<(end-start)<<"s"<<endl;
+
 #endif
 /*----------------------- DE算法调用结束--------------------------*/
 

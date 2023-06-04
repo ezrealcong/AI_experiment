@@ -3,24 +3,25 @@
 using namespace std;
 
 
-// 定义目标函数
-double target_func(double x, double y) {
-    return sin(x) + cos(y);
-}
+
 
 // 定义个体类
-    Individual::Individual(Benchmarks *fp_, vector<int> indexList_, int gene_size,double max_v,double min_v) {
+    Individual::Individual(Benchmarks *fp_,int gene_size,double max_v,double min_v) {
         genes.resize(gene_size);
         fitness = 0.0;
         max_value=max_v;
         min_value=min_v;
         fp=fp_;
-        indexList=indexList_;
     }
 
-    void Individual::setIndexList(vector<int> indexList_){
-        indexList=indexList_;
+    Individual::Individual(const Individual& individual){
+        genes=vector<double>(individual.genes);
+        fitness=individual.fitness;
+        max_value=individual.max_value;
+        min_value=individual.min_value;
+        fp=individual.fp;
     }
+
 
     // 随机初始化基因
     void Individual::random_init() {
@@ -39,7 +40,7 @@ double target_func(double x, double y) {
     }
 
     // 变异操作
-    void Individual::mutation(const vector<Individual>& population, double F) {
+    void Individual::mutation(const vector<Individual>& population, double F,vector<int>indexList) {
         //随机数
         random_device rd;
         mt19937 gen(rd());
@@ -53,6 +54,8 @@ double target_func(double x, double y) {
             r2 = dis(gen);
             r3 = dis(gen);
         }
+
+        
         for (int i : indexList)
         {
             genes[i] = population[r1].genes[i] + F * (population[r2].genes[i] - population[r3].genes[i]);
@@ -63,7 +66,7 @@ double target_func(double x, double y) {
     }
 
     // 交叉操作
-    void Individual::crossover(const Individual& parent, double CR) {
+    void Individual::crossover(const Individual& parent, double CR,vector<int>indexList) {
         random_device rd;
         mt19937 gen(rd());
         uniform_real_distribution<> dis(0.0, 1.0);
@@ -73,6 +76,7 @@ double target_func(double x, double y) {
                 genes[indexList[j]] = parent.genes[indexList[j]];
             }
         }
+
     }
 
 
@@ -86,8 +90,9 @@ DE::DE(int function_id_,vector<int> S_,int mode_,int pop_size_, int gene_size_, 
     S=S_;
     mode=mode_;
 
-    indexList=vector<int>();
+    indexList=vector<vector<int>>();
 
+//下面是选择调优的函数。
      if (function_id==1){
         fp = new F1();
         max_value=100;min_value=-100;
@@ -139,33 +144,49 @@ DE::DE(int function_id_,vector<int> S_,int mode_,int pop_size_, int gene_size_, 
 
     if(mode==0){
         S.clear();
-        for(int i=0;i<10;i++){
-            S.push_back(100);
+        for(int i=0;i<200;i++){
+            S.push_back(5);
         }
-        for(int i=0;i<S[0];i++){
-            indexList.push_back(i);
+        int start=0;
+        for (int s : S){
+            vector<int> tmp=vector<int>();
+            for(int i=start;i<start+s;i++){
+                tmp.push_back(i);
+            }
+            indexList.push_back(tmp);
+            start+=s;
         }
+
     }else if(mode==1){
-        for(int i=0;i<S[0];i++){
-            indexList.push_back(i);
+        int start=0;
+        for (int s : S){
+            vector<int> tmp=vector<int>();
+            for(int i=start;i<start+s;i++){
+                tmp.push_back(i);
+            }
+            indexList.push_back(tmp);
+            start+=s;
         }
     }else if(mode==2){
         if (S.empty()){
             for(int i=0;i<10;i++){
             S.push_back(100);
             }
-            for(int i=0;i<S[0];i++){
-                indexList.push_back(i);
+        }
+        int start=0;
+        for (int s : S){
+            vector<int> tmp=vector<int>();
+            for(int i=start;i<start+s;i++){
+                tmp.push_back(i);
             }
-        }else{
-            for(int i=0;i<S[0];i++){
-                indexList.push_back(i);
-            }
+            indexList.push_back(tmp);
+            start+=s;
         }
     }
 
 
-    population=vector<Individual>(pop_size, Individual(fp,indexList,gene_size,max_value,min_value));
+
+    population=vector<Individual>(pop_size, Individual(fp,gene_size,max_value,min_value));
     for (int i = 0; i < pop_size; i++) {
         population[i].random_init();
         population[i].calc_fitness();
@@ -175,11 +196,9 @@ DE::DE(int function_id_,vector<int> S_,int mode_,int pop_size_, int gene_size_, 
 void DE::run(){
     int iter = 0;
     double best_fitness = population[0].fitness;
-    double past_fitness= best_fitness;
     int best_index = 0;
     
-    double threhold=best_fitness;
-    int sequence=0;
+
     //挑出随机初始的群中最优的解
     for(int i=0;i<pop_size;i++){
         if (population[i].fitness<=best_fitness){
@@ -188,91 +207,39 @@ void DE::run(){
             }
     }
 
-    past_fitness=best_fitness;
 
     //优化
     while (iter < max_iter) {
-        for (int i = 0; i < pop_size; i++) {
-            Individual mutant(fp,indexList,gene_size,max_value,min_value);
-            mutant.mutation(population, F);
-            mutant.calc_fitness();
-            if (mutant.fitness <= population[i].fitness) {
-                Individual child(fp,indexList,gene_size,max_value,min_value);
-                child.crossover(mutant, CR);
-                child.calc_fitness();
-                if (child.fitness <= population[i].fitness) {
-                    population[i] = child;
-                } else {
-                    population[i] = mutant;
+
+        
+
+//下面是DE算法主要的优化代码。
+        //分别对不同的组别进行优化
+        for(vector<int> indexList_ : indexList){
+
+            for (int i = 0; i < pop_size; i++) {
+                Individual mutant(population[i]);
+                //变异
+                mutant.mutation(population, F,indexList_);
+                mutant.calc_fitness();
+            
+                if (mutant.fitness <= population[i].fitness) {
+                    //交换
+                    Individual child(population[i]);
+                    child.crossover(mutant, CR,indexList_);
+                    child.calc_fitness();
+                    if (child.fitness <= population[i].fitness) {
+                        population[i] = child;
+                    } else {
+                        population[i] = mutant;
+                    }
                 }
-            }
-            //优化后的适应值小于最好的，存储
-            if (population[i].fitness<=best_fitness){
-                best_fitness=population[i].fitness;
-                best_index=i;
             }
 
         }
         iter++;
+        cout<<iter<<endl;
 
-
-
-        if(past_fitness-best_fitness<=threhold){
-            sequence=(sequence+1)%S.size();
-            if(mode==0 || mode==1){
-                int sum=0;
-                for(int i=0;i<sequence;i++){
-                    sum+=S[i];
-                }
-                indexList.clear();
-                for(int i=sum;i<sum+S[sequence];i++){
-                    indexList.push_back(i);
-                }
-
-                for(int i=0;i<pop_size;i++){
-                    population[i].setIndexList(indexList);
-                }
-
-
-            }else if(mode==2){
-
-                if(S.size()!=1){
-                    //这里是S还没有完全合并成1000的情况。
-                    if(sequence==0){
-                        vector<int> tmpS(S);
-                        S.clear();
-
-                        for(int i=0;i<(int)tmpS.size();i+=2){
-                            S.push_back(tmpS[i]+tmpS[i+1]);
-                        }
-                        if(tmpS.size()%2 !=0){
-                            S.push_back(tmpS[tmpS.size()-1]);
-                        }   
-                    }
-
-                    int sum=0;
-                    for(int i=0;i<sequence;i++){
-                        sum+=S[i];
-                    }
-                    indexList.clear();
-                    for(int i=sum;i<sum+S[sequence];i++){
-                        indexList.push_back(i);
-                    }
-                    
-                    for(int i=0;i<pop_size;i++){
-                        population[i].setIndexList(indexList);
-                    }
-
-                }
-
-            }
-        }
-
-
-        threhold=0.5 * threhold + 0.5 *(best_fitness-past_fitness);
-        past_fitness=best_fitness;
-
-        //这里加入一个当适应值上升不了后，则对小组进行调换。
     }
 
 
@@ -287,12 +254,12 @@ void DE::run(){
     }
 
 
-    for(int i=0;i<gene_size;i++){
+    for(int i=0;i<100;i++){
         cout<<population[best_index].genes[i];
     }
-    cout<endl;
+    cout<<endl;
     population[best_index].calc_fitness();
-    cout << "Best fitness: " << (int)population[best_index].fitness<< endl;
+    cout << "Best fitness: " << population[best_index].fitness<< endl;
 }
 
 

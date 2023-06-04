@@ -28,13 +28,12 @@ public:
     double fitness;  // 适应度
     double max_value,min_value;
     Benchmarks *fp;
-    vector<int> indexList;
-    Individual(Benchmarks *fp,vector<int> indexList_, int gene_size,double max_value,double min_value);
-    void setIndexList(vector<int> indexList_);
+    Individual(Benchmarks *fp, int gene_size,double max_value,double min_value);
+    Individual(const Individual& individual);
     void random_init();
     void calc_fitness();
-    void mutation(const vector<Individual>& population, double F);
-    void crossover(const Individual& parent, double CR);
+    void mutation(const vector<Individual>& population, double F,vector<int> indexList);
+    void crossover(const Individual& parent, double CR,vector<int> indexList);
 
 };
 class DE
@@ -52,7 +51,7 @@ public:
     double F,CR;
     Benchmarks *fp;
     int function_id;
-    vector<int> indexList;
+    vector<vector<int>> indexList;
     DE(int function_id_,vector<int> S_,int mode_,int pop_size_, int gene_size_, double F_, double CR_, int max_iter_);
     void run();
 
