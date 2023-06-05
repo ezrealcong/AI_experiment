@@ -25,9 +25,15 @@ int main()
 
 /*----------------------- GA算法调用-----------------------------*/
 #ifdef __GA__  
-  //参数依次为：函数编号、交叉概率、变异概率、迭代次数
-  GeneticAlgorithm GA=GeneticAlgorithm(10,0.9,0.001,20);
-  GA.run();
+    //调用举例
+    Benchmarks* fp=new F1();
+    vector<int> group;        //自变量分组,如何想要把所有变量分一组，就在vector中填入0-999
+
+    GeneticAlgorithm ga=GeneticAlgorithm(fp); 
+    ga.Set_group(group);      //将分组传入GA算法中
+    ga.Init_GA();             //初始化GA算法,传入之后，必须初始化，这样设计的目的是，一个GA对象可以多次使用
+    vector<double> result=ga.Local_Solutions(); //调用GA算法，返回最优解
+
 
 #endif
 /*----------------------- GA算法调用结束--------------------------*/
