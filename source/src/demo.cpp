@@ -1,6 +1,7 @@
 #include "../include/Header.h"
 #include"../include/GA.h"
 #include"../include/DE.h"
+#include"../include/DG2.h"
 #include"../include/config.h"
 #include <sys/time.h>
 #include <cstdio>
@@ -11,6 +12,7 @@
 
 #ifdef RUN_ALL  //每个人给自己开发的进化算法定一个宏，加到这里
     #define __GA__
+    #define __DG2__
     #define __PSO__
     #define __DE__=true
     #define __CC__
@@ -27,11 +29,11 @@ int main()
 #ifdef __GA__  
     //调用举例
     Benchmarks* fp=new F1();
-    vector<int> group;        //自变量分组,如何想要把所有变量分一组，就在vector中填入0-999
+    vector<int> group;        //自变量分组,如果想要把所有变量分一组，就在vector中填入0-999
 
     GeneticAlgorithm ga=GeneticAlgorithm(fp); 
     ga.Set_group(group);      //将分组传入GA算法中
-    ga.Init_GA();             //初始化GA算法,传入之后，必须初始化，这样设计的目的是，一个GA对象可以多次使用
+    ga.Init_GA();             //初始化GA算法。传入分组之后必须初始化，这样设计的目的是，一个GA对象可以多次使用
     vector<double> result=ga.Local_Solutions(); //调用GA算法，返回最优解
 
 
@@ -87,6 +89,20 @@ int main()
 
 #endif
 /*----------------------- CC算法调用结束--------------------------*/
+
+
+/*----------------------- CC算法调用-----------------------------*/
+#ifdef __DG2__
+
+  //调用举例
+  DG2 dg2 = DG2(new F1());
+  dg2.ism();
+  dg2.dsm();
+  vector<vector<int>> groups=dg2.getGroups();//返回的是分组情况（每一组，存储的是下标）
+
+#endif
+/*----------------------- CC算法调用结束--------------------------*/
+
 
 
 
