@@ -1,6 +1,7 @@
 #include "../include/Header.h"
 #include"../include/GA.h"
 #include"../include/DE.h"
+#include"../include/DECCFR.h"
 #include"../include/config.h"
 #include <sys/time.h>
 #include <cstdio>
@@ -69,12 +70,21 @@ int main()
 
 /*----------------------- CC算法调用-----------------------------*/
 #ifdef __CC__
+  clock_t start,end;
 
+  printf("this is deccfr demom!\r\n");
+  DECCFR deccrf=DECCFR(1,vector<int>(),0,100,1000,0.6,0.8,150);
+  
+  start=time(0);
+  deccrf.run();
+  end=time(0);
+
+  cout<<"总时间"<<(end-start)<<"s"<<endl;
 
 #endif
 /*----------------------- CC算法调用结束--------------------------*/
 
-
+  
 
   return 0;
 }

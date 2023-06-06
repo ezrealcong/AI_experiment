@@ -1,3 +1,5 @@
+#ifndef  _DE_H
+#define  _DE_H
 #include"Header.h"
 #include <iostream>
 #include <cmath>
@@ -56,3 +58,4 @@ public:
     void run();
 
 };
+#endif
