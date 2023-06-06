@@ -1,11 +1,8 @@
 #include "../include/Header.h"
 #include"../include/GA.h"
 #include"../include/DE.h"
-
 #include"../include/DECCFR.h"
-
 #include"../include/DG2.h"
-
 #include"../include/config.h"
 #include <sys/time.h>
 #include <cstdio>
@@ -81,21 +78,15 @@ int main()
 
 /*----------------------- CC算法调用-----------------------------*/
 #ifdef __CC__
-  clock_t start,end;
 
-<<<<<<< HEAD
-  printf("this is deccfr demom!\r\n");
-  DECCFR deccrf=DECCFR(1,vector<int>(),0,100,1000,0.6,0.8,150);
+
+
   
-  start=time(0);
-  deccrf.run();
-=======
   clock_t start,end;
-  DE de=DE(1,vector<int>(),0,100,1000,0.6,0.8,150);
+  DECCFR deccfr=DECCFR(1,vector<int>(),0,100,1000,0.6,0.8,150);
   
   start=time(0);
-  de.run();
->>>>>>> 5d5b8124fc08dd175e973f1ede96289e5054396a
+  deccfr.run();
   end=time(0);
 
   cout<<"总时间"<<(end-start)<<"s"<<endl;
@@ -103,11 +94,8 @@ int main()
 #endif
 /*----------------------- CC算法调用结束--------------------------*/
 
-<<<<<<< HEAD
-  
-=======
 
-/*----------------------- CC算法调用-----------------------------*/
+/*----------------------- DG2算法调用-----------------------------*/
 #ifdef __DG2__
 
   //调用举例
@@ -117,11 +105,10 @@ int main()
   vector<vector<int>> groups=dg2.getGroups();//返回的是分组情况（每一组，存储的是下标）
 
 #endif
-/*----------------------- CC算法调用结束--------------------------*/
+/*----------------------- DG2算法调用结束--------------------------*/
 
 
 
->>>>>>> 5d5b8124fc08dd175e973f1ede96289e5054396a
 
   return 0;
 }
