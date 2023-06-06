@@ -1,7 +1,11 @@
 #include "../include/Header.h"
 #include"../include/GA.h"
 #include"../include/DE.h"
+
 #include"../include/DECCFR.h"
+
+#include"../include/DG2.h"
+
 #include"../include/config.h"
 #include <sys/time.h>
 #include <cstdio>
@@ -12,6 +16,7 @@
 
 #ifdef RUN_ALL  //每个人给自己开发的进化算法定一个宏，加到这里
     #define __GA__
+    #define __DG2__
     #define __PSO__
     #define __DE__=true
     #define __CC__
@@ -26,9 +31,15 @@ int main()
 
 /*----------------------- GA算法调用-----------------------------*/
 #ifdef __GA__  
-  //参数依次为：函数编号、交叉概率、变异概率、迭代次数
-  GeneticAlgorithm GA=GeneticAlgorithm(10,0.9,0.001,20);
-  GA.run();
+    //调用举例
+    Benchmarks* fp=new F1();
+    vector<int> group;        //自变量分组,如果想要把所有变量分一组，就在vector中填入0-999
+
+    GeneticAlgorithm ga=GeneticAlgorithm(fp); 
+    ga.Set_group(group);      //将分组传入GA算法中
+    ga.Init_GA();             //初始化GA算法。传入分组之后必须初始化，这样设计的目的是，一个GA对象可以多次使用
+    vector<double> result=ga.Local_Solutions(); //调用GA算法，返回最优解
+
 
 #endif
 /*----------------------- GA算法调用结束--------------------------*/
@@ -72,11 +83,19 @@ int main()
 #ifdef __CC__
   clock_t start,end;
 
+<<<<<<< HEAD
   printf("this is deccfr demom!\r\n");
   DECCFR deccrf=DECCFR(1,vector<int>(),0,100,1000,0.6,0.8,150);
   
   start=time(0);
   deccrf.run();
+=======
+  clock_t start,end;
+  DE de=DE(1,vector<int>(),0,100,1000,0.6,0.8,150);
+  
+  start=time(0);
+  de.run();
+>>>>>>> 5d5b8124fc08dd175e973f1ede96289e5054396a
   end=time(0);
 
   cout<<"总时间"<<(end-start)<<"s"<<endl;
@@ -84,7 +103,25 @@ int main()
 #endif
 /*----------------------- CC算法调用结束--------------------------*/
 
+<<<<<<< HEAD
   
+=======
+
+/*----------------------- CC算法调用-----------------------------*/
+#ifdef __DG2__
+
+  //调用举例
+  DG2 dg2 = DG2(new F1());
+  dg2.ism();
+  dg2.dsm();
+  vector<vector<int>> groups=dg2.getGroups();//返回的是分组情况（每一组，存储的是下标）
+
+#endif
+/*----------------------- CC算法调用结束--------------------------*/
+
+
+
+>>>>>>> 5d5b8124fc08dd175e973f1ede96289e5054396a
 
   return 0;
 }
