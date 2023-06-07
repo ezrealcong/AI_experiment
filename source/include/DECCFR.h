@@ -6,7 +6,9 @@
 #include <cmath>
 #include <random>
 #include <vector>
+#include<algorithm>
 #define EXPECT_VALUE 10
+#define EVOLUTION_STEP 50
 using namespace std;
 
 /* 
@@ -29,10 +31,17 @@ mode:0是完全可分，1是部分可分，2是完全不可分
 class DECCFR 
 {
   public:
-    //add a contribution value list for each group
-    vector<int> contribution;
-    vector<Individual> population;
+    
+    vector<double> contribution;//每个子问题的贡献度
+    vector<int> pre_stagnant;//每个子问题的伪停滞数
+    vector<bool> stagnant;//每个子问题的停滞标志位
+    vector<double> mean;//每个维度的均值
+    vector<double>  standard_deviation;//每个维度的标准差
 
+
+    vector<Individual> population;
+    int expect_value;
+    int evolution_step;
     vector<int> S;
     int mode;
 
