@@ -7,9 +7,11 @@
 #include <sys/time.h>
 #include <cstdio>
 #include <unistd.h>
-
 #include <vector>
 #include <ctime>
+#include<assert.h>
+#include<pthread.h>
+static pthread_mutex_t g_mutex_lock;
 
 #ifdef RUN_ALL  //每个人给自己开发的进化算法定一个宏，加到这里
     #define __GA__
@@ -19,7 +21,7 @@
     #define __CC__
     
 #endif
-
+void* deccfr_fun(void* arg);
 int main()
 {
   //每个人只在这里加代码来调用自己的算法，不可删减修改别人宏下的东西
@@ -59,14 +61,10 @@ int main()
 /*----------------------- DE算法调用-----------------------------*/
 #ifdef __DE__
   clock_t start,end;
-
-
   DE de=DE(1,vector<int>(),0,100,1000,0.6,0.8,150);
-  
   start=time(0);
   de.run();
   end=time(0);
-
   cout<<"总时间"<<(end-start)<<"s"<<endl;
 
 #endif
@@ -76,20 +74,25 @@ int main()
 
 
 
+
+
 /*----------------------- CC算法调用-----------------------------*/
 #ifdef __CC__
 
+  pthread_t tid[15];
+  int fun_index[15];
+  for(int i=0;i<15;i++){
+    fun_index[i]=i+1;
+  }
+  for(int i=0;i<15;i++){
+    int res = pthread_create(&tid[i],NULL,deccfr_fun,&fun_index[i]);
+    assert(res == 0);  
+  }
+  for(int i = 0; i < 15; i++)
+  {
+      pthread_join(tid[i],NULL);
+  }
 
-
-  
-  clock_t start,end;
-  DECCFR deccfr=DECCFR(1,vector<int>(),0,100,1000,0.6,0.8,150);
-  
-  start=time(0);
-  deccfr.run();
-  end=time(0);
-
-  cout<<"总时间"<<(end-start)<<"s"<<endl;
 
 #endif
 /*----------------------- CC算法调用结束--------------------------*/
@@ -113,7 +116,33 @@ int main()
   return 0;
 }
 
+void* deccfr_fun(void* arg)
+{
+  int i= *((int *)arg);
+  clock_t start,end;
+  DECCFR deccfr1=DECCFR(i,vector<int>(),0,100,1000,0.6,0.8,100000);
+  start=time(0);
+  deccfr1.run();
+  end=time(0);
+  pthread_mutex_lock(&g_mutex_lock);
+  printf("\r\n\r\nfunction %d !\r\n",i);
+  printf("groups: 200 gorups * 5 gens ,each 100000 iters !\r\n");
+  printf("param: DE de=DE(%d,vector<int>(),0,100,1000,0.6,0.8,100000);\r\n",i);
+  cout<<"总时间"<<(end-start)<<"s"<<endl;
+  pthread_mutex_unlock(&g_mutex_lock);
 
+  DECCFR deccfr2=DECCFR(i,vector<int>(),2,100,1000,0.6,0.8,100000);
+  start=time(0);
+  deccfr2.run();
+  end=time(0);
+  pthread_mutex_lock(&g_mutex_lock);
+  printf("\r\n\r\nfunction %d !\r\n",i);
+  printf("10 gorups * 100 gens ,each 100000 iters !\r\n");
+  printf("param: DE de=DE(%d,vector<int>(),2,100,1000,0.6,0.8,100000);\r\n",i);
+  cout<<"总时间"<<(end-start)<<"s"<<endl;
+  pthread_mutex_unlock(&g_mutex_lock);
+
+}
 //以下为之前的demo代码
 
 /*int main(){

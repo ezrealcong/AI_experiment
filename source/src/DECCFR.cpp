@@ -117,7 +117,7 @@ DECCFR::DECCFR(int function_id_,vector<int> S_,int mode_,int pop_size_, int gene
 }
 
 void DECCFR::run(){
-    printf("this is deccfr demom in run !\r\n");
+    
     int iter = 0;
     double best_fitness = population[0].fitness;
     int best_index = 0;
@@ -160,7 +160,7 @@ void DECCFR::run(){
             }
 
         }
-        iter++;
+       
         // 比较最优解   
         for (int i = 1; i < pop_size; i++) {
             if (population[i].fitness < best_fitness) {
@@ -175,9 +175,9 @@ void DECCFR::run(){
         if(best_fitness<EXPECT_VALUE){
             break;
         }
-        cout<<iter<<endl;
-
+        iter++;
+        //cout<<iter<<endl;
     }
-    cout << "Best fitness: " << best_fitness<< endl;
+    cout << "iter : "<<iter<<"Best fitness: " << best_fitness<< endl;
 }
 
