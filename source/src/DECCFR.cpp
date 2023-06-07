@@ -114,6 +114,16 @@ DECCFR::DECCFR(int function_id_,vector<int> S_,int mode_,int pop_size_, int gene
         population[i].random_init();
         population[i].calc_fitness();
     }
+
+    //init the contribution value for every group
+    for (int s : S){
+        vector<int> tmp=vector<int>();
+        for(int i=start;i<start+s;i++){
+            tmp.push_back(i);
+        }
+        indexList.push_back(tmp);
+        start+=s;
+    }
 }
 
 void DECCFR::run(int* iter_res,double* best_fitness_res){
@@ -140,6 +150,8 @@ void DECCFR::run(int* iter_res,double* best_fitness_res){
         //要改成只有贡献度最高的会被计算
         for(vector<int> indexList_ : indexList){
 
+            
+            
             for (int i = 0; i < pop_size; i++) {
                 Individual mutant(population[i]);
                 //变异

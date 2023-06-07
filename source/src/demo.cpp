@@ -104,8 +104,8 @@ int main()
 
 
 /*----------------------- CC算法调用-----------------------------*/
-#ifdef __CC__
-
+#ifdef __CCFR__
+  printf("This is CCFR !\r\n");
   pthread_t tid[15];
   int fun_index[15];
   for(int i=0;i<15;i++){
