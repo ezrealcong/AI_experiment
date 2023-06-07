@@ -7,7 +7,7 @@
 #include <vector>
 
 using namespace std;
-
+#define EXPECT_VALUE 10
 /* 
 F是缩放因子
 
@@ -43,7 +43,6 @@ class DE
 public:
     vector<Individual> population;
 
-    vector<int> S;
     int mode;
 
     double min_value,max_value;
@@ -54,8 +53,8 @@ public:
     Benchmarks *fp;
     int function_id;
     vector<vector<int>> indexList;
-    DE(int function_id_,vector<int> S_,int mode_,int pop_size_, int gene_size_, double F_, double CR_, int max_iter_);
-    void run();
+    DE(int function_id_,vector<vector<int>> indexList_,int mode_,int pop_size_, int gene_size_, double F_, double CR_, int max_iter_);
+    void run(int* iter_res,double* best_fitness_res);
 
 };
 #endif

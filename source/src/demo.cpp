@@ -21,7 +21,12 @@ static pthread_mutex_t g_mutex_lock;
     #define __CC__
     
 #endif
+
+//声明
 void* deccfr_fun(void* arg);
+void* deccfr_fun_de(void* arg);
+vector<vector<int>> Get_IndexList(int function_id);
+
 int main()
 {
   //每个人只在这里加代码来调用自己的算法，不可删减修改别人宏下的东西
@@ -60,12 +65,34 @@ int main()
 
 /*----------------------- DE算法调用-----------------------------*/
 #ifdef __DE__
-  clock_t start,end;
-  DE de=DE(1,vector<int>(),0,100,1000,0.6,0.8,150);
-  start=time(0);
-  de.run();
-  end=time(0);
-  cout<<"总时间"<<(end-start)<<"s"<<endl;
+
+  // int iter_res;
+  // double best_fitness_res;
+  // vector<vector<int>> indexList=Get_IndexList(1);
+  // clock_t start,end;
+  // DE de=DE(1,indexList,0,100,1000,0.6,0.8,150);
+  // start=time(0);
+  // de.run(&iter_res,&best_fitness_res);
+  // end=time(0);
+  // cout<<"总时间"<<(end-start)<<"s"<<endl;
+
+
+  pthread_t tid[15];
+  int fun_index[15];
+  for(int i=0;i<15;i++){
+    fun_index[i]=i+1;
+  }
+  int fun_num=15;
+  for(int i=0;i<fun_num;i++){
+    int res = pthread_create(&tid[i],NULL,deccfr_fun_de,&fun_index[i]);
+    assert(res == 0);  
+  }
+  for(int i = 0; i < fun_num; i++)
+  {
+      pthread_join(tid[i],NULL);
+  }
+
+
 
 #endif
 /*----------------------- DE算法调用结束--------------------------*/
@@ -149,6 +176,71 @@ void* deccfr_fun(void* arg)
   pthread_mutex_unlock(&g_mutex_lock);
 
 }
+
+void* deccfr_fun_de(void* arg)
+{
+  int iter_res;
+  double best_fitness_res;
+
+  int i= *((int *)arg);
+  clock_t start,end;
+  vector<vector<int>> indexList=Get_IndexList(i);
+  DE de1=DE(i,indexList,0,100,1000,0.6,0.8,100000);
+  start=time(0);
+  de1.run(&iter_res,&best_fitness_res);
+  end=time(0);
+  pthread_mutex_lock(&g_mutex_lock);
+  printf("\r\n\r\nfunction %d !\r\n",i);
+  printf("groups: 200 gorups * 5 gens ,each 100000 iters !\r\n");
+  printf("param: DE de=DE(%d,vector<int>(),0,100,1000,0.6,0.8,100000);\r\n",i);
+  cout << "iter : "<<iter_res<<"   Best fitness: " << best_fitness_res<< endl;
+  cout<<"总时间"<<(end-start)<<"s"<<endl;
+  pthread_mutex_unlock(&g_mutex_lock);
+
+}
+
+vector<vector<int>> Get_IndexList(int function_id){
+  
+  Benchmarks * fp;
+  if (function_id==1){
+        fp = new F1();
+    }else if (function_id==2){
+        fp = new F2();
+    }else if (function_id==3){
+        fp = new F3();
+    }else if (function_id==4){
+        fp = new F4();
+    }else if (function_id==5){
+        fp = new F5();
+    }else if (function_id==6){
+        fp = new F6();
+    }else if (function_id==7){
+        fp = new F7();
+    }else if (function_id==8){
+        fp = new F8();
+    }else if (function_id==9){
+        fp = new F9();
+    }else if (function_id==10){
+        fp = new F10();
+    }else if (function_id==11){
+        fp = new F11();
+    }else if (function_id==12){
+        fp = new F12();
+    }else if (function_id==13){
+        fp = new F13();
+    }else if (function_id==14){
+        fp = new F14();
+    }else if (function_id==15){
+        fp = new F15();
+    }
+
+  DG2 dg2 = DG2(fp);
+  dg2.ism();
+  dg2.dsm();
+  vector<vector<int>> groups=dg2.getGroups();
+  return groups;
+}
+
 //以下为之前的demo代码
 
 /*int main(){
