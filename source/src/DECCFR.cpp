@@ -116,12 +116,12 @@ DECCFR::DECCFR(int function_id_,vector<int> S_,int mode_,int pop_size_, int gene
         population[i].calc_fitness();
     }
     //init the contribution value for every group
-    for (int _ : S){
+    for (int i = 0; i < S.size(); i++){
         contribution.push_back(0.0);//每个子问题的贡献度
         pre_stagnant.push_back(0);//每个子问题的伪停滞数
         stagnant.push_back(false);//每个子问题的停滞标志位
     }
-    for(Individual _ : population){
+    for(int i = 0; i < gene_size; i++){
         mean.push_back(0.0);//每个维度的均值
         standard_deviation.push_back(0.0);//每个维度的标准差
     }
@@ -156,7 +156,8 @@ void DECCFR::run(int* iter_res,double* best_fitness_res){
     while (iter < max_iter ) {
         group_index_to_evolve = 0;
         //分别对不同的组别进行优化
-        for(vector<int> indexList_ : indexList){
+        for(vector<int> &indexList_ : indexList){
+           // printf("index %d\r\n",group_index_to_evolve);
             d_size=indexList_.size();
             //每个子问题去共同进化，evolution_step为每次审计贡献度之间进化的步数
             for(int j = 0;j<evolution_step;j++){
@@ -187,7 +188,7 @@ void DECCFR::run(int* iter_res,double* best_fitness_res){
                 {
                     //提取该维度所有种群的基因值
                     vector<double> gen_in_i;
-                    for(Individual individual : population){
+                    for(Individual & individual : population){
                         gen_in_i.push_back(individual.genes[gen_i] );
                     }
                     //计算该维度这次的均值和标准差
@@ -240,19 +241,25 @@ void DECCFR::run(int* iter_res,double* best_fitness_res){
                 }
             }
             //看看是不是达到了终止进化条件：
-            if(best_fitness < expect_value){
+            if(iter%5000==0){
+                printf("function %d  iter :%d ",function_id,iter);
+            }
+            if(best_fitness < expect_value || iter >= max_iter){
                 goto end_evolution;
             }
             //更新每个子问题的贡献度
+            //printf("cao\r\n");
             contribution[group_index_to_evolve]= (contribution[group_index_to_evolve] + fabs(last_best_fitness-best_fitness) )/2;
             //如果总群进化停滞不前，则贡献度归0
+            //printf("cao\r\n");
             if(stagnant[group_index_to_evolve]){
                 contribution[group_index_to_evolve]=0;
             }
+            //printf("cao\r\n");
             group_index_to_evolve ++;
         }
 
-       
+        
         max_contribution = *(max_element(contribution.begin(),contribution.end()));
         min_contribution =*(min_element(contribution.begin(),contribution.end()));
         //如果不是每个子问题贡献率都一致，就一直循环，每轮只有贡献度最高的会被计算
@@ -340,9 +347,13 @@ void DECCFR::run(int* iter_res,double* best_fitness_res){
                 }
             }
             //看看是不是达到了终止进化条件：
-            if(best_fitness < expect_value){
+            if(iter%5000==0){
+                printf("function %d  iter :%d ",function_id,iter);
+            }
+            if(best_fitness < expect_value || iter >= max_iter){
                 goto end_evolution;
             }
+
             //更新每个子问题的贡献度
             contribution[group_index_to_evolve]= (contribution[group_index_to_evolve] + fabs(last_best_fitness-best_fitness) )/2;
             //如果总群进化停滞不前，则贡献度归0
@@ -359,6 +370,7 @@ void DECCFR::run(int* iter_res,double* best_fitness_res){
             break;
         }
         //cout<<iter<<endl;
+       
     }
     *iter_res=iter;
     *best_fitness_res=best_fitness;
