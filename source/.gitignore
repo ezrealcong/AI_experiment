@@ -1,0 +1,5 @@
+/source/tmp
+/.vscode
+source/*.exe
+source/*.out
+source/include/config.h

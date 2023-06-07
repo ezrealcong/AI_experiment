@@ -59,6 +59,13 @@ using namespace std;
         for (int i : indexList)
         {
             genes[i] = population[r1].genes[i] + F * (population[r2].genes[i] - population[r3].genes[i]);
+            
+            if(genes[i]>max_value || genes[i]<min_value){
+                random_device rd;
+                mt19937 gen(rd());
+                uniform_real_distribution<> dis(min_value, max_value);
+                genes[i] = dis(gen);
+            }
         }
         //  (int i = 0; i < genes.size(); i++) {
         //     genes[i] = population[r1].genes[i] + F * (population[r2].genes[i] - population[r3].genes[i]);
@@ -80,17 +87,16 @@ using namespace std;
     }
 
 
-DE::DE(int function_id_,vector<int> S_,int mode_,int pop_size_, int gene_size_, double F_, double CR_, int max_iter_){
+DE::DE(int function_id_,vector<vector<int>> indexList_,int mode_,int pop_size_, int gene_size_, double F_, double CR_, int max_iter_){
     function_id=function_id_;
     pop_size=pop_size_;
     gene_size=gene_size_;
     F=F_;
     CR=CR_;
     max_iter=max_iter_;
-    S=S_;
     mode=mode_;
 
-    indexList=vector<vector<int>>();
+    indexList=indexList_;
 
 //下面是选择调优的函数。
      if (function_id==1){
@@ -140,50 +146,6 @@ DE::DE(int function_id_,vector<int> S_,int mode_,int pop_size_, int gene_size_, 
         max_value=100;min_value=-100;
     }
 
-    //设置最初始的S和indexList
-
-    if(mode==0){
-        S.clear();
-        for(int i=0;i<200;i++){
-            S.push_back(5);
-        }
-        int start=0;
-        for (int s : S){
-            vector<int> tmp=vector<int>();
-            for(int i=start;i<start+s;i++){
-                tmp.push_back(i);
-            }
-            indexList.push_back(tmp);
-            start+=s;
-        }
-
-    }else if(mode==1){
-        int start=0;
-        for (int s : S){
-            vector<int> tmp=vector<int>();
-            for(int i=start;i<start+s;i++){
-                tmp.push_back(i);
-            }
-            indexList.push_back(tmp);
-            start+=s;
-        }
-    }else if(mode==2){
-        if (S.empty()){
-            for(int i=0;i<10;i++){
-            S.push_back(100);
-            }
-        }
-        int start=0;
-        for (int s : S){
-            vector<int> tmp=vector<int>();
-            for(int i=start;i<start+s;i++){
-                tmp.push_back(i);
-            }
-            indexList.push_back(tmp);
-            start+=s;
-        }
-    }
-
 
 
     population=vector<Individual>(pop_size, Individual(fp,gene_size,max_value,min_value));
@@ -193,7 +155,7 @@ DE::DE(int function_id_,vector<int> S_,int mode_,int pop_size_, int gene_size_, 
     }
 }
 
-void DE::run(){
+void DE::run(int* iter_res,double* best_fitness_res){
     int iter = 0;
     double best_fitness = population[0].fitness;
     int best_index = 0;
@@ -234,20 +196,22 @@ void DE::run(){
             }
 
         }
-        iter++;
-        cout<<iter<<endl;
+       
 
-    }
-
-
-    // 输出最优解
-    best_fitness = population[0].fitness;
-    best_index = 0;
-    for (int i = 1; i < pop_size; i++) {
-        if (population[i].fitness < best_fitness) {
-            best_fitness = population[i].fitness;
-            best_index = i;
+        for (int i = 1; i < pop_size; i++) {
+            if (population[i].fitness < best_fitness) {
+                best_fitness = population[i].fitness;
+                best_index = i;
+            }
         }
+
+
+        cout<<function_id<<": "<<iter<<": "<<best_fitness<<endl;
+
+        if(best_fitness<EXPECT_VALUE){
+            break;
+        }
+        iter++;
     }
 
 
