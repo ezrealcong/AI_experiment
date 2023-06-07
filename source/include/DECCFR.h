@@ -45,7 +45,7 @@ class DECCFR
     int function_id;
     vector<vector<int>> indexList;
     DECCFR(int function_id_,vector<int> S_,int mode_,int pop_size_, int gene_size_, double F_, double CR_, int max_iter_);
-    void run();
+    void run(int* iter_res,double* best_fitness_res);
 
 };
 

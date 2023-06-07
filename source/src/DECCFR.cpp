@@ -116,7 +116,7 @@ DECCFR::DECCFR(int function_id_,vector<int> S_,int mode_,int pop_size_, int gene
     }
 }
 
-void DECCFR::run(){
+void DECCFR::run(int* iter_res,double* best_fitness_res){
     
     int iter = 0;
     double best_fitness = population[0].fitness;
@@ -178,6 +178,7 @@ void DECCFR::run(){
         iter++;
         //cout<<iter<<endl;
     }
-    cout << "iter : "<<iter<<"Best fitness: " << best_fitness<< endl;
+    *iter_res=iter;
+    *best_fitness_res=best_fitness;
 }
 
