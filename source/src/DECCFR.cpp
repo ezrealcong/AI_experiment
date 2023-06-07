@@ -116,15 +116,16 @@ DECCFR::DECCFR(int function_id_,vector<int> S_,int mode_,int pop_size_, int gene
         population[i].calc_fitness();
     }
     //init the contribution value for every group
-    for (int s : S){
-        contribution.push_back(0.0);
+    for (int _ : S){
+        contribution.push_back(0.0);//每个子问题的贡献度
+        pre_stagnant.push_back(0);//每个子问题的伪停滞数
+        stagnant.push_back(false);//每个子问题的停滞标志位
+    }
+    for(Individual _ : population){
+        mean.push_back(0.0);//每个维度的均值
+        standard_deviation.push_back(0.0);//每个维度的标准差
     }
 
-
-    vector<int> pre_stagnant;//每个子问题的伪停滞数
-    vector<bool> stagnant;//每个子问题的停滞标志位
-    vector<double> mean;//每个维度的均值
-    vector<double>  standard_deviation;//每个维度的标准差
 
 }
 
@@ -148,6 +149,9 @@ void DECCFR::run(int* iter_res,double* best_fitness_res){
     double sum, mean_tmp , variance, standard_deviation_tmp  ;//暂存一个维度的和，均值,方差及标准差
     int d_same,d_size;//用来统计一个组中一次进化后不变的维度数
     double max_contribution,min_contribution;
+
+    
+
     //优化 // 在迭代次数没有达到最大 并且 优化效果没有达到预期 之前都一直优化
     while (iter < max_iter ) {
         group_index_to_evolve = 0;
@@ -157,6 +161,7 @@ void DECCFR::run(int* iter_res,double* best_fitness_res){
             //每个子问题去共同进化，evolution_step为每次审计贡献度之间进化的步数
             for(int j = 0;j<evolution_step;j++){
                 for (int i = 0; i < pop_size; i++) {
+                    
                     Individual mutant(population[i]);
                     //变异
                     mutant.mutation(population, F,indexList_);
@@ -177,6 +182,7 @@ void DECCFR::run(int* iter_res,double* best_fitness_res){
                 
                 d_same=0;
                 //计算更新每个维度的均值和方差，并统计均值和方差与前一次相同的维度数量
+                
                 for (int gen_i : indexList_)
                 {
                     //提取该维度所有种群的基因值
@@ -192,8 +198,8 @@ void DECCFR::run(int* iter_res,double* best_fitness_res){
                     for (int k = 0 ; k < d_size ; k++)
                     {
                         variance = variance + pow(gen_in_i[k]-mean_tmp,2);
-                    }
-                    standard_deviation_tmp = sqrt(variance /d_size);
+                    }     
+                    standard_deviation_tmp = sqrt(variance /d_size);    
                     //统计均值和方差与前一次相同的维度数量
                     if(mean_tmp ==mean[gen_i] && standard_deviation_tmp ==standard_deviation[gen_i]){
                         d_same++;
@@ -246,7 +252,7 @@ void DECCFR::run(int* iter_res,double* best_fitness_res){
             group_index_to_evolve ++;
         }
 
-        
+       
         max_contribution = *(max_element(contribution.begin(),contribution.end()));
         min_contribution =*(min_element(contribution.begin(),contribution.end()));
         //如果不是每个子问题贡献率都一致，就一直循环，每轮只有贡献度最高的会被计算

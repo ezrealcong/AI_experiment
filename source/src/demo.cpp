@@ -18,7 +18,7 @@ static pthread_mutex_t g_mutex_lock;
     #define __DG2__
     #define __PSO__
     #define __DE__=true
-    #define __CC__
+    #define __CCFR__
     
 #endif
 
@@ -111,7 +111,7 @@ int main()
   for(int i=0;i<15;i++){
     fun_index[i]=i+1;
   }
-  int fun_num=15;
+  int fun_num=1;
   for(int i=0;i<fun_num;i++){
     int res = pthread_create(&tid[i],NULL,deccfr_fun,&fun_index[i]);
     assert(res == 0);  
@@ -146,6 +146,7 @@ int main()
 
 void* deccfr_fun(void* arg)
 {
+
   int iter_res;
   double best_fitness_res;
 
