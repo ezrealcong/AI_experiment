@@ -1,76 +1,52 @@
-/*
-为遗传算法设计一个类，包含以下成员函数：
-1. 构造函数，初始化种群
-2. 选择函数，根据适应度函数选择个体
-3. 交叉函数，根据交叉概率交叉个体
-4. 变异函数，根据变异概率变异个体
-5. 适应度函数，计算个体适应度（调用具体的f）
-6. 最优个体函数，返回最优个体
-7. 迭代函数，迭代一次
-8. 迭代次数函数，返回迭代次数
-9. 迭代终止函数，判断是否终止迭代
-10. 迭代终止次数函数，返回迭代终止次数
-11. 迭代终止最优个体函数，返回迭代终止时的最优个体
-12. 迭代终止最优个体适应度函数，返回迭代终止时的最优个体适应度
-13. 迭代终止最优个体位置函数，返回迭代终止时的最优个体位置
+#ifndef SOURCE_GA_H
+#define SOURCE_GA_H
 
-成员包括：
-1. 种群(个体:一个唯独为D的向量)
-2. 种群大小
-3. 交叉概率
-4. 变异概率
-5. 迭代次数
-6. 迭代终止条件（限定迭代次数、或者适应度fit到0）
-7. 迭代终止次数
-8. 迭代终止最优个体
-9. 迭代终止最优个体适应度
-10. 迭代终止最优个体位置
-11. 适应度函数指针
-*/
 #include "Header.h"
 #include <vector>
 #include <iostream>
 #include <random>
 #include <algorithm>
 
-using namespace std;
-
 class GeneticAlgorithm
 {
 private:
-    static constexpr int Population_size=50;
-    static constexpr int Dimension=1000;
-    int x_max,x_min;
+    static constexpr int Dimension=1000;    //自变量维度
+    int Population_size;                 //种群大小
+    int x_max,x_min;                        //自变量范围
+    int Iteration_times;                    //迭代次数
+    int Iteration_terminate_times;       //迭代终止次数
+    int function_id;                        //函数id
+    Benchmarks *fp;                         //f函数指针
+    double Cross_rate;                 //交叉概率
+    double Mutation_rate;              //变异概率
+    vector<double> fitness;                 //种群适应度
+    double best_fitness;                    //最优适应度
+    vector<double> best_x;                  //最优个体
+    vector<vector<double>> Population;      //种群
 
-    int Iteration_times;
-    int Iteration_terminate_times=100;
-
-    int function_id;
-    Benchmarks *fp;
-
-    double Cross_rate;
-    double Mutation_rate;
-    double best_fitness;
-    double* best_idividual;
+    vector<int> x_group;                    //自变量分组(内部关联的自变量分为一组)
 
 
-    vector<double*> Population;
-    vector<double> fitness;
-    vector<int> index;
-    vector<double> temp;
-    
-    void init_population();
-    void compute_fitness();
-    double* select();
-    double* Individuals_Copy();
-    double* cross();
-    double* mutation();
-    void Iterative_Evolution();
+    void Init_population();
+    void Compute_fitness();                 //计算种群适应度
+    int Random_int(int,int);                //生成随机整数
+    double Random_double(double,double);    //生成随机浮点数
+    vector<double>& Select();               //选择(轮盘赌)
+    void Copy(vector<double>&);             //复制
+    void Cross(vector<double>&);            //交叉
+    void Mutation(vector<double>&);         //变异
+    void Iterative_Evolution();             //迭代进化
+    void Print();                           //打印结果
 
-    
+
 public:
-    GeneticAlgorithm(int, double , double , int);
+    GeneticAlgorithm(Benchmarks*fp);
     ~GeneticAlgorithm();
+    void Init_GA();
+    void Set_group(vector<int>& group);
 
-    void run();
+
+    vector<double> Local_Solutions();
 };
+
+#endif //SOURCE_GA_H

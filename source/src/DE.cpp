@@ -210,9 +210,6 @@ void DE::run(){
 
     //优化
     while (iter < max_iter) {
-
-        
-
 //下面是DE算法主要的优化代码。
         //分别对不同的组别进行优化
         for(vector<int> indexList_ : indexList){

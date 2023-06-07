@@ -1,11 +1,12 @@
-#ifndef  _DE_H
-#define  _DE_H
+#ifndef  _DECCFR_H
+#define  _DECCFR_H
 #include"Header.h"
+#include"DE.h"
 #include <iostream>
 #include <cmath>
 #include <random>
 #include <vector>
-
+#define EXPECT_VALUE 10
 using namespace std;
 
 /* 
@@ -23,24 +24,13 @@ S：是一个整数序列，其中整数累加和为1000，如果题目中没有
 mode:0是完全可分，1是部分可分，2是完全不可分
 */
 
-class Individual
-{
-public:
-    vector<double> genes;  // 基因
-    double fitness;  // 适应度
-    double max_value,min_value;
-    Benchmarks *fp;
-    Individual(Benchmarks *fp, int gene_size,double max_value,double min_value);
-    Individual(const Individual& individual);
-    void random_init();
-    void calc_fitness();
-    void mutation(const vector<Individual>& population, double F,vector<int> indexList);
-    void crossover(const Individual& parent, double CR,vector<int> indexList);
 
-};
-class DE
+
+class DECCFR 
 {
-public:
+  public:
+    //add a contribution value list for each group
+    vector<int> contribution;
     vector<Individual> population;
 
     vector<int> S;
@@ -54,8 +44,9 @@ public:
     Benchmarks *fp;
     int function_id;
     vector<vector<int>> indexList;
-    DE(int function_id_,vector<int> S_,int mode_,int pop_size_, int gene_size_, double F_, double CR_, int max_iter_);
-    void run();
+    DECCFR(int function_id_,vector<int> S_,int mode_,int pop_size_, int gene_size_, double F_, double CR_, int max_iter_);
+    void run(int* iter_res,double* best_fitness_res);
 
 };
+
 #endif

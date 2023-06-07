@@ -1,22 +1,27 @@
 #include "../include/Header.h"
 #include"../include/GA.h"
 #include"../include/DE.h"
+#include"../include/DECCFR.h"
+#include"../include/DG2.h"
 #include"../include/config.h"
 #include <sys/time.h>
 #include <cstdio>
 #include <unistd.h>
-
 #include <vector>
 #include <ctime>
+#include<assert.h>
+#include<pthread.h>
+static pthread_mutex_t g_mutex_lock;
 
 #ifdef RUN_ALL  //每个人给自己开发的进化算法定一个宏，加到这里
     #define __GA__
+    #define __DG2__
     #define __PSO__
     #define __DE__=true
     #define __CC__
     
 #endif
-
+void* deccfr_fun(void* arg);
 int main()
 {
   //每个人只在这里加代码来调用自己的算法，不可删减修改别人宏下的东西
@@ -25,9 +30,15 @@ int main()
 
 /*----------------------- GA算法调用-----------------------------*/
 #ifdef __GA__  
-  //参数依次为：函数编号、交叉概率、变异概率、迭代次数
-  GeneticAlgorithm GA=GeneticAlgorithm(10,0.9,0.001,20);
-  GA.run();
+    //调用举例
+    Benchmarks* fp=new F1();
+    vector<int> group;        //自变量分组,如果想要把所有变量分一组，就在vector中填入0-999
+
+    GeneticAlgorithm ga=GeneticAlgorithm(fp); 
+    ga.Set_group(group);      //将分组传入GA算法中
+    ga.Init_GA();             //初始化GA算法。传入分组之后必须初始化，这样设计的目的是，一个GA对象可以多次使用
+    vector<double> result=ga.Local_Solutions(); //调用GA算法，返回最优解
+
 
 #endif
 /*----------------------- GA算法调用结束--------------------------*/
@@ -50,14 +61,10 @@ int main()
 /*----------------------- DE算法调用-----------------------------*/
 #ifdef __DE__
   clock_t start,end;
-
-
   DE de=DE(1,vector<int>(),0,100,1000,0.6,0.8,150);
-  
   start=time(0);
   de.run();
   end=time(0);
-
   cout<<"总时间"<<(end-start)<<"s"<<endl;
 
 #endif
@@ -67,27 +74,81 @@ int main()
 
 
 
+
+
 /*----------------------- CC算法调用-----------------------------*/
-#ifdef __CC__
+#ifdef __CCFR__
+  printf("This is CCFR !\r\n");
+  pthread_t tid[15];
+  int fun_index[15];
+  for(int i=0;i<15;i++){
+    fun_index[i]=i+1;
+  }
+  int fun_num=15;
+  for(int i=0;i<fun_num;i++){
+    int res = pthread_create(&tid[i],NULL,deccfr_fun,&fun_index[i]);
+    assert(res == 0);  
+  }
+  for(int i = 0; i < fun_num; i++)
+  {
+      pthread_join(tid[i],NULL);
+  }
 
-  clock_t start,end;
-  DE de=DE(1,vector<int>(),0,100,1000,0.6,0.8,150);
-  
-  start=time(0);
-  de.run();
-  end=time(0);
-
-  cout<<"总时间"<<(end-start)<<"s"<<endl;
 
 #endif
 /*----------------------- CC算法调用结束--------------------------*/
+
+
+/*----------------------- DG2算法调用-----------------------------*/
+#ifdef __DG2__
+
+  //调用举例
+  DG2 dg2 = DG2(new F1());
+  dg2.ism();
+  dg2.dsm();
+  vector<vector<int>> groups=dg2.getGroups();//返回的是分组情况（每一组，存储的是下标）
+
+#endif
+/*----------------------- DG2算法调用结束--------------------------*/
+
 
 
 
   return 0;
 }
 
+void* deccfr_fun(void* arg)
+{
+  int iter_res;
+  double best_fitness_res;
 
+  int i= *((int *)arg);
+  clock_t start,end;
+  DECCFR deccfr1=DECCFR(i,vector<int>(),0,100,1000,0.6,0.8,100000);
+  start=time(0);
+  deccfr1.run(&iter_res,&best_fitness_res);
+  end=time(0);
+  pthread_mutex_lock(&g_mutex_lock);
+  printf("\r\n\r\nfunction %d !\r\n",i);
+  printf("groups: 200 gorups * 5 gens ,each 100000 iters !\r\n");
+  printf("param: DE de=DE(%d,vector<int>(),0,100,1000,0.6,0.8,100000);\r\n",i);
+  cout << "iter : "<<iter_res<<"   Best fitness: " << best_fitness_res<< endl;
+  cout<<"总时间"<<(end-start)<<"s"<<endl;
+  pthread_mutex_unlock(&g_mutex_lock);
+
+  DECCFR deccfr2=DECCFR(i,vector<int>(),2,100,1000,0.6,0.8,100000);
+  start=time(0);
+  deccfr2.run(&iter_res,&best_fitness_res);
+  end=time(0);
+  pthread_mutex_lock(&g_mutex_lock);
+  printf("\r\n\r\nfunction %d !\r\n",i);
+  printf("10 gorups * 100 gens ,each 100000 iters !\r\n");
+  printf("param: DE de=DE(%d,vector<int>(),2,100,1000,0.6,0.8,100000);\r\n",i);
+  cout << "iter : "<<iter_res<<"   Best fitness: " << best_fitness_res<< endl;
+  cout<<"总时间"<<(end-start)<<"s"<<endl;
+  pthread_mutex_unlock(&g_mutex_lock);
+
+}
 //以下为之前的demo代码
 
 /*int main(){
