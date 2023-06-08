@@ -7,8 +7,8 @@
 #include <random>
 #include <vector>
 #include<algorithm>
-#define EXPECT_VALUE 10
-#define EVOLUTION_STEP 50
+
+#define EVOLUTION_STEP 10
 using namespace std;
 
 /* 
@@ -53,7 +53,7 @@ class DECCFR
     Benchmarks *fp;
     int function_id;
     vector<vector<int>> indexList;
-    DECCFR(int function_id_,vector<int> S_,int mode_,int pop_size_, int gene_size_, double F_, double CR_, int max_iter_);
+    DECCFR(int function_id_,vector<vector<int>> indexList_,int mode_,int pop_size_, int gene_size_, double F_, double CR_, int max_iter_);
     void run(int* iter_res,double* best_fitness_res);
 
 };

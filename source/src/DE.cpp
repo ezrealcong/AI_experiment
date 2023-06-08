@@ -198,7 +198,7 @@ void DE::run(int* iter_res,double* best_fitness_res){
         }
        
 
-        for (int i = 1; i < pop_size; i++) {
+        for (int i = 0; i < pop_size; i++) {
             if (population[i].fitness < best_fitness) {
                 best_fitness = population[i].fitness;
                 best_index = i;

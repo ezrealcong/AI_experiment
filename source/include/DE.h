@@ -7,7 +7,7 @@
 #include <vector>
 
 using namespace std;
-#define EXPECT_VALUE 10
+
 /* 
 F是缩放因子
 

@@ -16,15 +16,16 @@ static pthread_mutex_t g_mutex_lock;
 #ifdef RUN_ALL  //每个人给自己开发的进化算法定一个宏，加到这里
     #define __GA__
     #define __DG2__
-    #define __PSO__
-    #define __DE__=true
+    #define __DE__
     #define __CCFR__
+    #define __DE_CCFR_DG2__
     
 #endif
 
 //声明
 void* deccfr_fun(void* arg);
-void* deccfr_fun_de(void* arg);
+void* de_dg2_fun(void* arg);
+void* de_dg2_ccfr_fun(void* arg);
 vector<vector<int>> Get_IndexList(int function_id);
 
 int main()
@@ -52,18 +53,10 @@ int main()
   
 
 
-/*-----------------------PSO算法调用-----------------------------*/
-#ifdef __PSO__
-
-#endif
-/*-----------------------PSO算法调用结束--------------------------*/
-
-
-
-
 
 
 /*----------------------- DE算法调用-----------------------------*/
+//DE+DG2
 #ifdef __DE__
 
   // int iter_res;
@@ -84,7 +77,7 @@ int main()
   }
   int fun_num=15;
   for(int i=0;i<fun_num;i++){
-    int res = pthread_create(&tid[i],NULL,deccfr_fun_de,&fun_index[i]);
+    int res = pthread_create(&tid[i],NULL,de_dg2_fun,&fun_index[i]);
     assert(res == 0);  
   }
   for(int i = 0; i < fun_num; i++)
@@ -104,14 +97,15 @@ int main()
 
 
 /*----------------------- CC算法调用-----------------------------*/
+//DE+CCFR
 #ifdef __CCFR__
-  printf("This is CCFR !\r\n");
+  printf("This is CCFR 15 functions !\r\n");
   pthread_t tid[15];
   int fun_index[15];
   for(int i=0;i<15;i++){
     fun_index[i]=i+1;
   }
-  int fun_num=1;
+  int fun_num=15;
   for(int i=0;i<fun_num;i++){
     int res = pthread_create(&tid[i],NULL,deccfr_fun,&fun_index[i]);
     assert(res == 0);  
@@ -124,6 +118,10 @@ int main()
 
 #endif
 /*----------------------- CC算法调用结束--------------------------*/
+
+
+
+
 
 
 /*----------------------- DG2算法调用-----------------------------*/
@@ -141,6 +139,37 @@ int main()
 
 
 
+
+/*----------------------- DE_CCFR_DG2算法调用-----------------------------*/
+#ifdef __DE_CCFR_DG2__
+
+
+
+printf("This is DE + DG2 + CCFR 15 functions !\r\n");
+  pthread_t tid[15];
+  int fun_index[15];
+  for(int i=0;i<15;i++){
+    fun_index[i]=i+1;
+  }
+  int fun_num=15;
+  for(int i=0;i<fun_num;i++){
+    int res = pthread_create(&tid[i],NULL,de_dg2_ccfr_fun,&fun_index[i]);
+    assert(res == 0);  
+  }
+  for(int i = 0; i < fun_num; i++)
+  {
+      pthread_join(tid[i],NULL);
+  }
+
+
+
+
+#endif
+/*----------------------- DE_CCFR_DG2算法调用结束--------------------------*/
+
+
+
+
   return 0;
 }
 
@@ -152,33 +181,33 @@ void* deccfr_fun(void* arg)
 
   int i= *((int *)arg);
   clock_t start,end;
-  DECCFR deccfr1=DECCFR(i,vector<int>(),0,100,1000,0.6,0.8,100000);
+  DECCFR deccfr1=DECCFR(i,vector<vector<int>>(),0,100,1000,0.6,0.8,100000);
   start=time(0);
   deccfr1.run(&iter_res,&best_fitness_res);
   end=time(0);
   pthread_mutex_lock(&g_mutex_lock);
   printf("\r\n\r\nfunction %d !\r\n",i);
   printf("groups: 200 gorups * 5 gens ,each 100000 iters !\r\n");
-  printf("param: DE de=DE(%d,vector<int>(),0,100,1000,0.6,0.8,100000);\r\n",i);
+  printf("param: DE de=DE(%d,vector<int>(),0,100,1000,0.6,0.8,10000);\r\n",i);
   cout << "iter : "<<iter_res<<"   Best fitness: " << best_fitness_res<< endl;
   cout<<"总时间"<<(end-start)<<"s"<<endl;
   pthread_mutex_unlock(&g_mutex_lock);
 
-  DECCFR deccfr2=DECCFR(i,vector<int>(),2,100,1000,0.6,0.8,100000);
+  DECCFR deccfr2=DECCFR(i,vector<vector<int>>(),2,100,1000,0.6,0.8,100000);
   start=time(0);
   deccfr2.run(&iter_res,&best_fitness_res);
   end=time(0);
   pthread_mutex_lock(&g_mutex_lock);
   printf("\r\n\r\nfunction %d !\r\n",i);
   printf("10 gorups * 100 gens ,each 100000 iters !\r\n");
-  printf("param: DE de=DE(%d,vector<int>(),2,100,1000,0.6,0.8,100000);\r\n",i);
+  printf("param: DE de=DE(%d,vector<int>(),2,100,1000,0.6,0.8,10000);\r\n",i);
   cout << "iter : "<<iter_res<<"   Best fitness: " << best_fitness_res<< endl;
   cout<<"总时间"<<(end-start)<<"s"<<endl;
   pthread_mutex_unlock(&g_mutex_lock);
 
 }
 
-void* deccfr_fun_de(void* arg)
+void* de_dg2_fun(void* arg)
 {
   int iter_res;
   double best_fitness_res;
@@ -193,12 +222,34 @@ void* deccfr_fun_de(void* arg)
   pthread_mutex_lock(&g_mutex_lock);
   printf("\r\n\r\nfunction %d !\r\n",i);
   printf("groups: 200 gorups * 5 gens ,each 100000 iters !\r\n");
-  printf("param: DE de=DE(%d,vector<int>(),0,100,1000,0.6,0.8,100000);\r\n",i);
+  printf("param: DE de=DE(%d,vector<int>(),0,100,1000,0.6,0.8,10000);\r\n",i);
   cout << "iter : "<<iter_res<<"   Best fitness: " << best_fitness_res<< endl;
   cout<<"总时间"<<(end-start)<<"s"<<endl;
   pthread_mutex_unlock(&g_mutex_lock);
 
 }
+void* de_dg2_ccfr_fun(void* arg)
+{
+  int iter_res;
+  double best_fitness_res;
+
+  int i= *((int *)arg);
+  clock_t start,end;
+  vector<vector<int>> indexList=Get_IndexList(i);
+  DECCFR deccfr=DECCFR(i,indexList,1,100,1000,0.6,0.8,100000);
+  start=time(0);
+  deccfr.run(&iter_res,&best_fitness_res);
+  end=time(0);
+  pthread_mutex_lock(&g_mutex_lock);
+  printf("\r\n\r\nfunction %d !\r\n",i);
+  printf("groups: 200 gorups * 5 gens ,each 100000 iters !\r\n");
+  printf("param: DE de=DE(%d,vector<int>(),0,100,1000,0.6,0.8,10000);\r\n",i);
+  cout << "iter : "<<iter_res<<"   Best fitness: " << best_fitness_res<< endl;
+  cout<<"总时间"<<(end-start)<<"s"<<endl;
+  pthread_mutex_unlock(&g_mutex_lock);
+
+}
+
 
 vector<vector<int>> Get_IndexList(int function_id){
   

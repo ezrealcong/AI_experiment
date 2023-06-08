@@ -3,18 +3,18 @@ using namespace std;
 
 
 
-DECCFR::DECCFR(int function_id_,vector<int> S_,int mode_,int pop_size_, int gene_size_, double F_, double CR_, int max_iter_){
+DECCFR::DECCFR(int function_id_,vector<vector<int>> indexList_,int mode_,int pop_size_, int gene_size_, double F_, double CR_, int max_iter_){
     function_id=function_id_;
     pop_size=pop_size_;
     gene_size=gene_size_;
     F=F_;
     CR=CR_;
     max_iter=max_iter_; //这里max_iter指的是每一组子问题进化一次加一，所有组总共能迭代的最大次数
-    S=S_;
+    S=vector<int>();
     mode=mode_;
     expect_value = EXPECT_VALUE;
     evolution_step = EVOLUTION_STEP;
-    indexList=vector<vector<int>>();
+    
 
 //下面是选择调优的函数。
      if (function_id==1){
@@ -67,6 +67,7 @@ DECCFR::DECCFR(int function_id_,vector<int> S_,int mode_,int pop_size_, int gene
     //设置最初始的S和indexList
 
     if(mode==0){
+        indexList=vector<vector<int>>();
         S.clear();
         for(int i=0;i<200;i++){
             S.push_back(5);
@@ -82,16 +83,9 @@ DECCFR::DECCFR(int function_id_,vector<int> S_,int mode_,int pop_size_, int gene
         }
 
     }else if(mode==1){
-        int start=0;
-        for (int s : S){
-            vector<int> tmp=vector<int>();
-            for(int i=start;i<start+s;i++){
-                tmp.push_back(i);
-            }
-            indexList.push_back(tmp);
-            start+=s;
-        }
+        indexList= indexList_;
     }else if(mode==2){
+        indexList=vector<vector<int>>();
         if (S.empty()){
             for(int i=0;i<10;i++){
             S.push_back(100);
@@ -116,7 +110,7 @@ DECCFR::DECCFR(int function_id_,vector<int> S_,int mode_,int pop_size_, int gene
         population[i].calc_fitness();
     }
     //init the contribution value for every group
-    for (int i = 0; i < S.size(); i++){
+    for (int i = 0; i < indexList.size(); i++){
         contribution.push_back(0.0);//每个子问题的贡献度
         pre_stagnant.push_back(0);//每个子问题的伪停滞数
         stagnant.push_back(false);//每个子问题的停滞标志位
@@ -241,7 +235,7 @@ void DECCFR::run(int* iter_res,double* best_fitness_res){
                 }
             }
             //看看是不是达到了终止进化条件：
-            if(iter%5000==0){
+            if(iter%200==0){
                 printf("function %d  iter :%d ",function_id,iter);
             }
             if(best_fitness < expect_value || iter >= max_iter){
@@ -347,7 +341,7 @@ void DECCFR::run(int* iter_res,double* best_fitness_res){
                 }
             }
             //看看是不是达到了终止进化条件：
-            if(iter%5000==0){
+            if(iter%200==0){
                 printf("function %d  iter :%d ",function_id,iter);
             }
             if(best_fitness < expect_value || iter >= max_iter){
