@@ -21,7 +21,7 @@ public:
 
 private:
 
-    std::vector<vector<int>> g; //邻接矩阵
+    std::vector<vector<int>> g; //邻接表
     static constexpr int dim =1000;
     Benchmarks *func;
     double **delta1;

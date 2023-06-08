@@ -19,6 +19,7 @@ GeneticAlgorithm::GeneticAlgorithm(Benchmarks*fp)
 void GeneticAlgorithm::Set_group(vector<int>& group)
 {
     this->x_group = group;
+    //如果只对一维进行优化，此时没有交叉操作，只需要进行变异操作
     if(x_group.size()==1)
     {
         this->Cross_rate=0.0;
@@ -46,6 +47,7 @@ GeneticAlgorithm::~GeneticAlgorithm()
 inline void GeneticAlgorithm::Init_population()
 {
     this-> Population = vector < vector < double >> (Population_size, vector<double>(Dimension));
+    //仅仅对要分组优化的维度进行初始化赋值（赋一个随机数），其余默认为0.0
     for (int i = 1; i < Population_size; i++)
     {
         for (auto j: x_group)
@@ -70,7 +72,8 @@ inline void GeneticAlgorithm::Compute_fitness()
     int best_index = 0;
     for (int i = 0; i < Population_size; i++)
     {
-        if (fitness[i] < best_fitness)
+        //这里记录一下最优个体的下标
+        if (fitness[i] < best_fitness) 
         {
             best_fitness = fitness[i];
             best_index = i;
