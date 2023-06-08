@@ -54,6 +54,9 @@ void DG2::arrayCopy(double *dest, double *src, int size){
     }
 }
 
+
+//提前计算好dsm差分分组中所需要的计算数据
+//DG2算法的主要计算量在ism这个函数中，对一个每个f，需要进行O(n^2)次compute计算
 void DG2::ism (void){
 
     double fp1, fp2, fp3, fp4, d1, d2;
@@ -92,6 +95,7 @@ void DG2::ism (void){
             counter++;
             prev = prog;
             prog = (int)(counter/(float)(dim*(dim-1))*2*100);
+            //下面三行代码是用来显示对于一个f分组的进度的，实际运行不需要显示分组进度，所以注释掉
 //            if (prog % 5 == 0 && prev != prog){
 //                printf("Progress = %02d\r", prog);
 //            }
@@ -169,6 +173,8 @@ void DG2::dfs(vector<bool>& f,vector<int>& group,int cur)
     return;
 }
 
+
+//用差分进行分组
 void DG2::dsm (void)
 {
 
@@ -177,7 +183,8 @@ void DG2::dsm (void)
     double eInf = 0, eSup = 0;
     double etha0 = 0, etha1 = 0;
     double eps = 0;
-
+    
+    //首先对于差值小于下界和大于上界的（i，j）判断关系
     for (int i = 0 ; i < dim - 1; i++){
         for (int j = i + 1; j < dim; j++){
             array[0] = archive_base;
@@ -202,7 +209,8 @@ void DG2::dsm (void)
             }
         }
     }
-
+    
+    //对于差值处于上界和下界之间的(i,j)判断两个维度之间的关系
     for (int i = 0 ; i < dim - 1; i++){
         for (int j = i + 1; j < dim; j++){
             array[0] = archive_base;
@@ -232,7 +240,8 @@ void DG2::dsm (void)
         }
     }
 
-
+    //上述判断关系完成之后，维度之间的关系用图(邻接表)来表示，此时用dfs分组
+    //dfs将图中连通的节点分入同一组(同一个vector<int>)
     vector<bool> f(dim,false);
     for(int i=0;i<dim;i++)
     {
