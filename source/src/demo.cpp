@@ -127,11 +127,23 @@ int main()
 /*----------------------- DG2算法调用-----------------------------*/
 #ifdef __DG2__
 
-  //调用举例
-  DG2 dg2 = DG2(new F1());
+  Benchmarks* fp=new F6();
+  DG2 dg2 = DG2(fp);
   dg2.ism();
   dg2.dsm();
   vector<vector<int>> groups=dg2.getGroups();//返回的是分组情况（每一组，存储的是下标）
+  //接下来打印分组情况
+  printf("F%d have %zu group.\n",fp->getID(),groups.size());
+  for(int i=0;i<groups.size();i++){
+      printf("Group: %d  ,%zu dimension:\n",i+1,groups[i].size());
+      int last=groups[i].size()-1;
+      for(int j=0;j<groups[i].size();j++){
+          printf("%d",groups[i][j]);
+          if(j!=last) printf(",");
+          else printf("\n\n");
+      }
+  }
+  delete fp;
 
 #endif
 /*----------------------- DG2算法调用结束--------------------------*/
