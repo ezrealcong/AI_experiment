@@ -1,5 +1,6 @@
 #include"../include/DE.h"
 
+#include<fstream>
 using namespace std;
 
 
@@ -204,6 +205,12 @@ void DE::run(int* iter_res,double* best_fitness_res){
                 best_index = i;
             }
         }
+
+        string fileName="tmp/DE_f"+to_string(function_id)+".txt";
+        cout<<fileName<<endl;
+        ofstream outfile(fileName,ios::app);
+        outfile<<best_fitness<<endl;
+        outfile.close();
 
 
         cout<<function_id<<": "<<iter<<": "<<best_fitness<<endl;

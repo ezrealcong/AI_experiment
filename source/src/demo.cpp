@@ -59,17 +59,6 @@ int main()
 //DE+DG2
 #ifdef __DE__
 
-  // int iter_res;
-  // double best_fitness_res;
-  // vector<vector<int>> indexList=Get_IndexList(1);
-  // clock_t start,end;
-  // DE de=DE(1,indexList,0,100,1000,0.6,0.8,150);
-  // start=time(0);
-  // de.run(&iter_res,&best_fitness_res);
-  // end=time(0);
-  // cout<<"总时间"<<(end-start)<<"s"<<endl;
-
-
   pthread_t tid[15];
   int fun_index[15];
   for(int i=0;i<15;i++){
@@ -227,14 +216,14 @@ void* de_dg2_fun(void* arg)
   int i= *((int *)arg);
   clock_t start,end;
   vector<vector<int>> indexList=Get_IndexList(i);
-  DE de1=DE(i,indexList,0,100,1000,0.6,0.8,100000);
+  DE de1=DE(i,indexList,0,150,1000,0.6,0.8,1000);
   start=time(0);
   de1.run(&iter_res,&best_fitness_res);
   end=time(0);
   pthread_mutex_lock(&g_mutex_lock);
   printf("\r\n\r\nfunction %d !\r\n",i);
-  printf("groups: 200 gorups * 5 gens ,each 100000 iters !\r\n");
-  printf("param: DE de=DE(%d,vector<int>(),0,100,1000,0.6,0.8,10000);\r\n",i);
+  printf("groups: dg2,each 1000 iters !\r\n");
+  printf("param: DE de=DE(%d,dg2,0,150,1000,0.6,0.8,1000);\r\n",i);
   cout << "iter : "<<iter_res<<"   Best fitness: " << best_fitness_res<< endl;
   cout<<"总时间"<<(end-start)<<"s"<<endl;
   pthread_mutex_unlock(&g_mutex_lock);
