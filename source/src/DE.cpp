@@ -207,7 +207,6 @@ void DE::run(int* iter_res,double* best_fitness_res){
         }
 
         string fileName="tmp/DE_f"+to_string(function_id)+".txt";
-        cout<<fileName<<endl;
         ofstream outfile(fileName,ios::app);
         outfile<<best_fitness<<endl;
         outfile.close();
