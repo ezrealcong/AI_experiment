@@ -181,26 +181,26 @@ void* deccfr_fun(void* arg)
 
   int i= *((int *)arg);
   clock_t start,end;
-  DECCFR deccfr1=DECCFR(i,vector<vector<int>>(),0,100,1000,0.6,0.8,100000);
+  DECCFR deccfr1=DECCFR(i,vector<vector<int>>(),0,100,1000,0.6,0.8,1000);
   start=time(0);
   deccfr1.run(&iter_res,&best_fitness_res);
   end=time(0);
   pthread_mutex_lock(&g_mutex_lock);
   printf("\r\n\r\nfunction %d !\r\n",i);
   printf("groups: 200 gorups * 5 gens ,each 100000 iters !\r\n");
-  printf("param: DE de=DE(%d,vector<int>(),0,100,1000,0.6,0.8,10000);\r\n",i);
+  printf("param: DE de=DE(%d,vector<int>(),0,100,1000,0.6,0.8,1000);\r\n",i);
   cout << "iter : "<<iter_res<<"   Best fitness: " << best_fitness_res<< endl;
   cout<<"总时间"<<(end-start)<<"s"<<endl;
   pthread_mutex_unlock(&g_mutex_lock);
 
-  DECCFR deccfr2=DECCFR(i,vector<vector<int>>(),2,100,1000,0.6,0.8,100000);
+  DECCFR deccfr2=DECCFR(i,vector<vector<int>>(),2,100,1000,0.6,0.8,1000);
   start=time(0);
   deccfr2.run(&iter_res,&best_fitness_res);
   end=time(0);
   pthread_mutex_lock(&g_mutex_lock);
   printf("\r\n\r\nfunction %d !\r\n",i);
   printf("10 gorups * 100 gens ,each 100000 iters !\r\n");
-  printf("param: DE de=DE(%d,vector<int>(),2,100,1000,0.6,0.8,10000);\r\n",i);
+  printf("param: DE de=DE(%d,vector<int>(),2,100,1000,0.6,0.8,1000);\r\n",i);
   cout << "iter : "<<iter_res<<"   Best fitness: " << best_fitness_res<< endl;
   cout<<"总时间"<<(end-start)<<"s"<<endl;
   pthread_mutex_unlock(&g_mutex_lock);

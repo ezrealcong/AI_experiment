@@ -8,7 +8,7 @@
 #include <vector>
 #include<algorithm>
 
-#define EVOLUTION_STEP 10
+#define EVOLUTION_STEP 5
 using namespace std;
 
 /* 

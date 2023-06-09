@@ -188,13 +188,13 @@ void DECCFR::run(int* iter_res,double* best_fitness_res){
                     //计算该维度这次的均值和标准差
                     
                     sum = std::accumulate(std::begin(gen_in_i), std::end(gen_in_i), 0.0);
-                    mean_tmp =  sum /d_size;
+                    mean_tmp =  sum /pop_size;
                     variance  = 0.0;
-                    for (int k = 0 ; k < d_size ; k++)
+                    for (int k = 0 ; k < pop_size ; k++)
                     {
                         variance = variance + pow(gen_in_i[k]-mean_tmp,2);
                     }     
-                    standard_deviation_tmp = sqrt(variance /d_size);    
+                    standard_deviation_tmp = sqrt(variance /pop_size);    
                     //统计均值和方差与前一次相同的维度数量
                     if(mean_tmp ==mean[gen_i] && standard_deviation_tmp ==standard_deviation[gen_i]){
                         d_same++;
@@ -235,10 +235,10 @@ void DECCFR::run(int* iter_res,double* best_fitness_res){
                 }
             }
             //看看是不是达到了终止进化条件：
-            if(iter%200==0){
+            if(iter%50==0){
                 printf("function %d  iter :%d ",function_id,iter);
             }
-            if(best_fitness < expect_value || iter >= max_iter){
+            if(best_fitness <= expect_value || iter >= max_iter){
                 goto end_evolution;
             }
             //更新每个子问题的贡献度
@@ -295,13 +295,13 @@ void DECCFR::run(int* iter_res,double* best_fitness_res){
                     //计算该维度这次的均值和标准差
                     
                     sum = std::accumulate(std::begin(gen_in_i), std::end(gen_in_i), 0.0);
-                    mean_tmp =  sum /d_size;
+                    mean_tmp =  sum /pop_size;
                     variance  = 0.0;
-                    for (int k = 0 ; k < d_size ; k++)
+                    for (int k = 0 ; k < pop_size ; k++)
                     {
                         variance = variance + pow(gen_in_i[k]-mean_tmp,2);
                     }
-                    standard_deviation_tmp = sqrt(variance /d_size);
+                    standard_deviation_tmp = sqrt(variance /pop_size);
                     //统计均值和方差与前一次相同的维度数量
                     if(mean_tmp ==mean[gen_i] && standard_deviation_tmp ==standard_deviation[gen_i]){
                         d_same++;
@@ -344,7 +344,7 @@ void DECCFR::run(int* iter_res,double* best_fitness_res){
             if(iter%200==0){
                 printf("function %d  iter :%d ",function_id,iter);
             }
-            if(best_fitness < expect_value || iter >= max_iter){
+            if(best_fitness <= expect_value || iter >= max_iter){
                 goto end_evolution;
             }
 
