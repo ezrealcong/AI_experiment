@@ -120,7 +120,7 @@ DECCFR::DECCFR(int function_id_,vector<vector<int>> indexList_,int mode_,int pop
         standard_deviation.push_back(0.0);//每个维度的标准差
     }
 
-
+    max_iter = max_iter*indexList.size();
 }
 
 void DECCFR::run(int* iter_res,double* best_fitness_res){
@@ -235,7 +235,7 @@ void DECCFR::run(int* iter_res,double* best_fitness_res){
                 }
             }
             //看看是不是达到了终止进化条件：
-            if(iter%50==0){
+            if(iter%100==0){
                 printf("function %d  iter :%d ",function_id,iter);
             }
             if(best_fitness <= expect_value || iter >= max_iter){
@@ -341,7 +341,7 @@ void DECCFR::run(int* iter_res,double* best_fitness_res){
                 }
             }
             //看看是不是达到了终止进化条件：
-            if(iter%200==0){
+            if(iter%100==0){
                 printf("function %d  iter :%d ",function_id,iter);
             }
             if(best_fitness <= expect_value || iter >= max_iter){

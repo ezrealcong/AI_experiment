@@ -1,143 +1,52 @@
-DECCFR  #define EVOLUTION_STEP 50
-
-function 1 !
-groups: 200 gorups * 5 gens ,each 100000 iters !
-param: DE de=DE(1,vector<int>(),0,100,1000,0.6,0.8,10000);
-iter : 100000   Best fitness: 79.6384
-总时间7671s
-
-function 2 !
-groups: 200 gorups * 5 gens ,each 100000 iters !
-param: DE de=DE(2,vector<int>(),0,100,1000,0.6,0.8,10000);
-iter : 100019   Best fitness: 2512.39
-总时间8714s
-
-function 3 !
-groups: 200 gorups * 5 gens ,each 100000 iters !
-param: DE de=DE(3,vector<int>(),0,100,1000,0.6,0.8,10000);
-iter : 100039   Best fitness: 20.3109
-总时间7956s
-
-function 4 !
-groups: 200 gorups * 5 gens ,each 100000 iters !
-param: DE de=DE(4,vector<int>(),0,100,1000,0.6,0.8,10000);
-iter : 100003   Best fitness: 4.88741e+11
-总时间16171s
-
-function 5 !
-groups: 200 gorups * 5 gens ,each 100000 iters !
-param: DE de=DE(5,vector<int>(),0,100,1000,0.6,0.8,10000);
-iter : 100027   Best fitness: 1.49444e+07
-总时间19051s
-
-function 6 !
-groups: 200 gorups * 5 gens ,each 100000 iters !
-param: DE de=DE(6,vector<int>(),0,100,1000,0.6,0.8,10000);
-iter : 100002   Best fitness: 1.0519e+06
-总时间27239s
-
-function 7 !
-groups: 200 gorups * 5 gens ,each 100000 iters !
-param: DE de=DE(7,vector<int>(),0,100,1000,0.6,0.8,10000);
-iter : 100026   Best fitness: 2.62159e+09
-总时间15956s
-
-function 8 !
-groups: 200 gorups * 5 gens ,each 100000 iters !
-param: DE de=DE(8,vector<int>(),0,100,1000,0.6,0.8,10000);
-iter : 100038   Best fitness: 1.90924e+16
-总时间30258s
-
-function 9 !
-groups: 200 gorups * 5 gens ,each 100000 iters !
-param: DE de=DE(9,vector<int>(),0,100,1000,0.6,0.8,10000);
-iter : 100048   Best fitness: 1.12033e+11
-总时间31740s
-
-function 10 !
-groups: 200 gorups * 5 gens ,each 100000 iters !
-param: DE de=DE(10,vector<int>(),0,100,1000,0.6,0.8,10000);
-iter : 100002   Best fitness: 9.26598e+07
-总时间36923s
-
-function 11 !
-groups: 200 gorups * 5 gens ,each 100000 iters !
-param: DE de=DE(11,vector<int>(),0,100,1000,0.6,0.8,10000);
-iter : 100020   Best fitness: 1.01436e+12
-总时间31904s
-
-function 12 !
-groups: 200 gorups * 5 gens ,each 100000 iters !
-param: DE de=DE(12,vector<int>(),0,100,1000,0.6,0.8,10000);
-iter : 100041   Best fitness: 1625.23
-总时间4026s
-
-function 13 !
-groups: 200 gorups * 5 gens ,each 100000 iters !
-param: DE de=DE(13,vector<int>(),0,100,1000,0.6,0.8,10000);
-iter : 100006   Best fitness: 3.59451e+10
-总时间31999s
-
-function 14 !
-groups: 200 gorups * 5 gens ,each 100000 iters !
-param: DE de=DE(14,vector<int>(),0,100,1000,0.6,0.8,10000);
-iter : 100021   Best fitness: 3.68375e+11
-总时间31158s
-
-function 15 !
-groups: 200 gorups * 5 gens ,each 100000 iters !
-param: DE de=DE(15,vector<int>(),0,100,1000,0.6,0.8,10000);
-iter : 100019   Best fitness: 2.07418e+09
-总时间6837s
-
-DE
-
-function 1 !
-groups: 200 gorups * 5 gens ,each 100000 iters !
-param: DE de=DE(1,vector<int>(),0,100,1000,0.6,0.8,100000);
-iter : 138   Best fitness: 8.3344
-总时间715s
-
-
-function 1 !
-10 gorups * 100 gens ,each 100000 iters !
-param: DE de=DE(1,vector<int>(),2,100,1000,0.6,0.8,100000);
-iter : 8378   Best fitness: 9.84877
-总时间1472s
-
-
-function 2 !
-groups: 200 gorups * 5 gens ,each 100000 iters !
-param: DE de=DE(2,vector<int>(),0,100,1000,0.6,0.8,100000);
-iter : 1004   Best fitness: 9.80503
-总时间3257s
-
-
-function 2 !
-10 gorups * 100 gens ,each 100000 iters !
-param: DE de=DE(2,vector<int>(),2,100,1000,0.6,0.8,100000);
-iter : 100000   Best fitness: 965.642
-总时间13696s
-
-
-function 12 !
-groups: 200 gorups * 5 gens ,each 100000 iters !
-param: DE de=DE(12,vector<int>(),0,100,1000,0.6,0.8,100000);
-iter : 100000   Best fitness: 949.478
-总时间32133s
-
-
-function 12 !
-10 gorups * 100 gens ,each 100000 iters !
-param: DE de=DE(12,vector<int>(),2,100,1000,0.6,0.8,100000);
-iter : 100000   Best fitness: 444.635
-总时间1448s
+DE+CCFR  --------------------------------------------------------------------------------
+#define EXPECT_VALUE 0.1
+#define EVOLUTION_STEP 5
 
 
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+DE+CCFR+DG2  --------------------------------------------------------------------------------
+#define EXPECT_VALUE 0.1
+#define EVOLUTION_STEP 5
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+DE+DG2   --------------------------------------------------------------------------------
+
+
+
+
+GA   --------------------------------------------------------------------------------
+
+
+DG2   --------------------------------------------------------------------------------
 
 
 
