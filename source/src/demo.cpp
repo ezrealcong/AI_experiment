@@ -243,7 +243,6 @@ void* de_dg2_ccfr_fun(void* arg)
   end=time(0);
   pthread_mutex_lock(&g_mutex_lock);
   printf("\r\n\r\nfunction %d !\r\n",i);
-  printf("groups: 200 gorups * 5 gens ,each 100000 iters !\r\n");
   printf("param: DE de=DE(%d,vector<int>(),0,100,1000,0.6,0.8,1000);\r\n",i);
   cout << "iter : "<<iter_res<<"   Best fitness: " << best_fitness_res<< endl;
   cout<<"总时间"<<(end-start)<<"s"<<endl;
