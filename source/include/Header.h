@@ -24,7 +24,11 @@
 #include "F13.h"
 #include "F14.h"
 #include "F15.h"
+<<<<<<< HEAD
 #define EXPECT_VALUE 0
+=======
+#define EXPECT_VALUE 1
+>>>>>>> 3ad2d26893ec1ec7583c43ea917570b5ebd5d30f
 using namespace std;
 
 Benchmarks* generateFuncObj(int funcID);

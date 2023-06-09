@@ -39,7 +39,7 @@ int main()
     //调用举例
     Benchmarks* fp=new F1();
     vector<int> group;        //自变量分组,如果想要把所有变量分一组，就在vector中填入0-999
-
+    iota(group.begin(),group.end(),0);
     GeneticAlgorithm ga=GeneticAlgorithm(fp); 
     ga.Set_group(group);      //将分组传入GA算法中
     ga.Init_GA();             //初始化GA算法。传入分组之后必须初始化，这样设计的目的是，一个GA对象可以多次使用
@@ -58,17 +58,6 @@ int main()
 /*----------------------- DE算法调用-----------------------------*/
 //DE+DG2
 #ifdef __DE__
-
-  // int iter_res;
-  // double best_fitness_res;
-  // vector<vector<int>> indexList=Get_IndexList(1);
-  // clock_t start,end;
-  // DE de=DE(1,indexList,0,100,1000,0.6,0.8,150);
-  // start=time(0);
-  // de.run(&iter_res,&best_fitness_res);
-  // end=time(0);
-  // cout<<"总时间"<<(end-start)<<"s"<<endl;
-
 
   pthread_t tid[15];
   int fun_index[15];
@@ -127,11 +116,23 @@ int main()
 /*----------------------- DG2算法调用-----------------------------*/
 #ifdef __DG2__
 
-  //调用举例
-  DG2 dg2 = DG2(new F1());
+  Benchmarks* fp=new F6();
+  DG2 dg2 = DG2(fp);
   dg2.ism();
   dg2.dsm();
   vector<vector<int>> groups=dg2.getGroups();//返回的是分组情况（每一组，存储的是下标）
+  //接下来打印分组情况
+  printf("F%d have %zu group.\n",fp->getID(),groups.size());
+  for(int i=0;i<groups.size();i++){
+      printf("Group: %d  ,%zu dimension:\n",i+1,groups[i].size());
+      int last=groups[i].size()-1;
+      for(int j=0;j<groups[i].size();j++){
+          printf("%d",groups[i][j]);
+          if(j!=last) printf(",");
+          else printf("\n\n");
+      }
+  }
+  delete fp;
 
 #endif
 /*----------------------- DG2算法调用结束--------------------------*/
@@ -215,14 +216,14 @@ void* de_dg2_fun(void* arg)
   int i= *((int *)arg);
   clock_t start,end;
   vector<vector<int>> indexList=Get_IndexList(i);
-  DE de1=DE(i,indexList,0,100,1000,0.6,0.8,100000);
+  DE de1=DE(i,indexList,0,150,1000,0.6,0.8,1000);
   start=time(0);
   de1.run(&iter_res,&best_fitness_res);
   end=time(0);
   pthread_mutex_lock(&g_mutex_lock);
   printf("\r\n\r\nfunction %d !\r\n",i);
-  printf("groups: 200 gorups * 5 gens ,each 100000 iters !\r\n");
-  printf("param: DE de=DE(%d,vector<int>(),0,100,1000,0.6,0.8,10000);\r\n",i);
+  printf("groups: dg2,each 1000 iters !\r\n");
+  printf("param: DE de=DE(%d,dg2,0,150,1000,0.6,0.8,1000);\r\n",i);
   cout << "iter : "<<iter_res<<"   Best fitness: " << best_fitness_res<< endl;
   cout<<"总时间"<<(end-start)<<"s"<<endl;
   pthread_mutex_unlock(&g_mutex_lock);
