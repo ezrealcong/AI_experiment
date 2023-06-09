@@ -214,8 +214,6 @@ void DECCFR::run(int* iter_res,double* best_fitness_res){
                 //若停滞次数大于维度数(这个数可以自己设，人家推荐是这个)，则标记该种群停滞不前
                 if(pre_stagnant[group_index_to_evolve]>=d_size){
                     stagnant[group_index_to_evolve]=true;
-                }else{
-                    stagnant[group_index_to_evolve]=false;
                 }
                 //如果子问题停滞不前则提前终止对此子问题的优化
                 if(stagnant[group_index_to_evolve]){
@@ -321,8 +319,6 @@ void DECCFR::run(int* iter_res,double* best_fitness_res){
                 //若停滞次数大于维度数(这个数可以自己设，人家推荐是这个)，则标记该种群停滞不前
                 if(pre_stagnant[group_index_to_evolve]>=d_size){
                     stagnant[group_index_to_evolve]=true;
-                }else{
-                    stagnant[group_index_to_evolve]=false;
                 }
                 //如果子问题停滞不前则提前终止对此子问题的优化
                 if(stagnant[group_index_to_evolve]){

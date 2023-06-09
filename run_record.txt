@@ -28,45 +28,93 @@ DE+CCFR+DG2  -------------------------------------------------------------------
 
 function 12 !
 param: DE de=DE(12,vector<int>(),0,100,1000,0.6,0.8,1000);
-iter : 1000   Best fitness: 1.7723e+12
-总时间65s
-
-
-function 15 !
-param: DE de=DE(15,vector<int>(),0,100,1000,0.6,0.8,1000);
-iter : 1000   Best fitness: 2.61029e+14
-总时间120s
-
-
-function 6 !
-param: DE de=DE(6,vector<int>(),0,100,1000,0.6,0.8,1000);
-iter : 8002   Best fitness: 1.06363e+06
-总时间237s
+iter : 1000   Best fitness: 1.65002e+12
+总时间33s
 
 
 function 3 !
 param: DE de=DE(3,vector<int>(),0,100,1000,0.6,0.8,1000);
-iter : 1000   Best fitness: 21.5827
-总时间224s
+iter : 1000   Best fitness: 21.6075
+总时间135s
+
+
+function 15 !
+param: DE de=DE(15,vector<int>(),0,100,1000,0.6,0.8,1000);
+iter : 1000   Best fitness: 3.04811e+14
+总时间115s
+
+
+function 6 !
+param: DE de=DE(6,vector<int>(),0,100,1000,0.6,0.8,1000);
+iter : 8004   Best fitness: 1.06911e+06
+总时间349s
 
 
 function 11 !
 param: DE de=DE(11,vector<int>(),0,100,1000,0.6,0.8,1000);
-iter : 19000   Best fitness: 9.49179e+12
-总时间525s
-
-
+iter : 19000   Best fitness: 1.18968e+13
+总时间532s
 
 
 function 9 !
 param: DE de=DE(9,vector<int>(),0,100,1000,0.6,0.8,1000);
-iter : 19000   Best fitness: 1.82233e+09
-总时间575s
+iter : 19000   Best fitness: 1.30054e+09
+总时间533s
+
 
 function 10 !
 param: DE de=DE(10,vector<int>(),0,100,1000,0.6,0.8,1000);
-iter : 20001   Best fitness: 9.50118e+07
-总时间870s
+iter : 20002   Best fitness: 9.49063e+07
+总时间654s
+
+
+function 13 !
+param: DE de=DE(13,vector<int>(),0,100,1000,0.6,0.8,1000);
+iter : 96000   Best fitness: 3.64744e+09
+总时间4618s
+
+
+function 14 !
+param: DE de=DE(14,vector<int>(),0,100,1000,0.6,0.8,1000);
+iter : 96000   Best fitness: 1.24437e+11
+总时间4693s
+
+
+function 8 !
+param: DE de=DE(8,vector<int>(),0,100,1000,0.6,0.8,1000);
+iter : 208000   Best fitness: 9.73192e+07
+总时间5326s
+
+
+function 7 !
+param: DE de=DE(7,vector<int>(),0,100,1000,0.6,0.8,1000);
+iter : 706000   Best fitness: 5.14078e+07
+总时间8965s
+
+
+function 4 !
+param: DE de=DE(4,vector<int>(),0,100,1000,0.6,0.8,1000);
+iter : 707000   Best fitness: 1.18743e+07
+总时间11293s
+
+
+function 1 !
+param: DE de=DE(1,vector<int>(),0,100,1000,0.6,0.8,1000);
+iter : 1000000   Best fitness: 1.11917e+07
+总时间15642s
+
+
+function 5 !
+param: DE de=DE(5,vector<int>(),0,100,1000,0.6,0.8,1000);
+iter : 707004   Best fitness: 6.154e+06
+总时间16270s
+
+
+function 2 !
+param: DE de=DE(2,vector<int>(),0,100,1000,0.6,0.8,1000);
+iter : 1000000   Best fitness: 363.271
+总时间18256s
+
 
 
 
