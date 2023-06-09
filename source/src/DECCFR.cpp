@@ -235,9 +235,9 @@ void DECCFR::run(int* iter_res,double* best_fitness_res){
                 }
             }
             //看看是不是达到了终止进化条件：
-            if(iter%100==0){
+            /*if(iter%100==0){
                 printf("function %d  iter :%d ",function_id,iter);
-            }
+            }*/
             if(best_fitness <= expect_value || iter >= max_iter){
                 goto end_evolution;
             }
@@ -341,9 +341,9 @@ void DECCFR::run(int* iter_res,double* best_fitness_res){
                 }
             }
             //看看是不是达到了终止进化条件：
-            if(iter%100==0){
+            /*if(iter%100==0){
                 printf("function %d  iter :%d ",function_id,iter);
-            }
+            }*/
             if(best_fitness <= expect_value || iter >= max_iter){
                 goto end_evolution;
             }

@@ -26,15 +26,47 @@ DE+CCFR+DG2  -------------------------------------------------------------------
 #define EVOLUTION_STEP 5
 
 
+function 12 !
+param: DE de=DE(12,vector<int>(),0,100,1000,0.6,0.8,1000);
+iter : 1000   Best fitness: 1.7723e+12
+总时间65s
+
+
+function 15 !
+param: DE de=DE(15,vector<int>(),0,100,1000,0.6,0.8,1000);
+iter : 1000   Best fitness: 2.61029e+14
+总时间120s
+
+
+function 6 !
+param: DE de=DE(6,vector<int>(),0,100,1000,0.6,0.8,1000);
+iter : 8002   Best fitness: 1.06363e+06
+总时间237s
+
+
+function 3 !
+param: DE de=DE(3,vector<int>(),0,100,1000,0.6,0.8,1000);
+iter : 1000   Best fitness: 21.5827
+总时间224s
+
+
+function 11 !
+param: DE de=DE(11,vector<int>(),0,100,1000,0.6,0.8,1000);
+iter : 19000   Best fitness: 9.49179e+12
+总时间525s
 
 
 
 
+function 9 !
+param: DE de=DE(9,vector<int>(),0,100,1000,0.6,0.8,1000);
+iter : 19000   Best fitness: 1.82233e+09
+总时间575s
 
-
-
-
-
+function 10 !
+param: DE de=DE(10,vector<int>(),0,100,1000,0.6,0.8,1000);
+iter : 20001   Best fitness: 9.50118e+07
+总时间870s
 
 
 
