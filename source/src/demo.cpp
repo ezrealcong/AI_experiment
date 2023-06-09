@@ -39,7 +39,7 @@ int main()
     //调用举例
     Benchmarks* fp=new F1();
     vector<int> group;        //自变量分组,如果想要把所有变量分一组，就在vector中填入0-999
-
+    iota(group.begin(),group.end(),0);
     GeneticAlgorithm ga=GeneticAlgorithm(fp); 
     ga.Set_group(group);      //将分组传入GA算法中
     ga.Init_GA();             //初始化GA算法。传入分组之后必须初始化，这样设计的目的是，一个GA对象可以多次使用
