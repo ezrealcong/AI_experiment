@@ -157,7 +157,7 @@ inline void GeneticAlgorithm::Iterative_Evolution()
                 double U2 = rand() * 1.0f / RAND_MAX; 
                 double Z = sqrt(-2 * log(U1))*cos(2 * PI * U2);
                 newPopulation[i][j] =min((double)x_max,newPopulation[i][j] + 2*Z);
-                newPopulation[i][j] =max((double)x_min,newPopulation[i][j] + 2*Z);
+                newPopulation[i][j] =max((double)x_min,newPopulation[i][j]);
             } 
         }
     }
