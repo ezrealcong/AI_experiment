@@ -5,11 +5,13 @@
 GeneticAlgorithm::GeneticAlgorithm(Benchmarks*fp)
 {
     this->Iteration_times = 0;
-    this->Iteration_terminate_times=100;
-    this->Population_size=50;
+    this->Iteration_terminate_times=1000;
+    this->Population_size=100;
     this->Cross_rate=0.9;
-    this->Mutation_rate=0.01;
+    this->Mutation_rate=0.05;
     this->fitness = vector<double>(Population_size);
+    this->index = vector<int>(Population_size);
+    iota(index.begin(),index.end(),0);
     this->fp=fp;
     x_min=fp->getMinX();
     x_max=fp->getMaxX();
@@ -19,7 +21,6 @@ GeneticAlgorithm::GeneticAlgorithm(Benchmarks*fp)
 void GeneticAlgorithm::Set_group(vector<int>& group)
 {
     this->x_group = group;
-    //如果只对一维进行优化，此时没有交叉操作，只需要进行变异操作
     if(x_group.size()==1)
     {
         this->Cross_rate=0.0;
@@ -32,14 +33,12 @@ void GeneticAlgorithm::Init_GA()
     Iteration_times = 0;
     Init_population();
     Compute_fitness();
-    best_fitness = *min_element(fitness.begin(), fitness.end());
-    best_x = Population[distance(fitness.begin(), min_element(fitness.begin(), fitness.end()))];
 }
 
-//析构函数
+//析构函数(为空即可,没有分配动态分配的资源)
 GeneticAlgorithm::~GeneticAlgorithm()
 {
-    delete fp;
+
 }
 
 
@@ -47,7 +46,7 @@ GeneticAlgorithm::~GeneticAlgorithm()
 inline void GeneticAlgorithm::Init_population()
 {
     this-> Population = vector < vector < double >> (Population_size, vector<double>(Dimension));
-    //仅仅对要分组优化的维度进行初始化赋值（赋一个随机数），其余默认为0.0
+    //第一个个体为(0,0,0,0,......)
     for (int i = 1; i < Population_size; i++)
     {
         for (auto j: x_group)
@@ -68,26 +67,18 @@ inline void GeneticAlgorithm::Compute_fitness()
         fitness[i] = fp->compute(Population[i].data());
         y_max = max(y_max, fitness[i]);
     }
-    best_fitness = y_max;
-    int best_index = 0;
+    sort(index.begin(),index.end(),[&](int a,int b){return fitness[a]<fitness[b];});
+    best_fitness = fitness[index[0]];      //记录最优函数值
+
     for (int i = 0; i < Population_size; i++)
     {
-        //这里记录一下最优个体的下标
-        if (fitness[i] < best_fitness) 
-        {
-            best_fitness = fitness[i];
-            best_index = i;
-        }
-        fitness[i] = y_max - fitness[i];
+        fitness[i] = y_max - fitness[i];   //根据函数值得到适应度
         sum += fitness[i];
     }
     for (int i = 0; i < Population_size; i++)
     {
-        fitness[i] /= sum;
+        fitness[i] /= sum;                 //换算成概率，后面用于轮盘赌
     }
-
-    best_x = Population[best_index];
-
 }
 
 
@@ -111,8 +102,8 @@ inline double GeneticAlgorithm::Random_double(double MIN, double MAX)
 }
 
 
-//选择
-inline vector<double> &GeneticAlgorithm::Select()
+//使用轮盘赌选择
+inline vector<double>& GeneticAlgorithm::Select()
 {
     double r = Random_double(0, 1);
     double sum = 0;
@@ -125,108 +116,64 @@ inline vector<double> &GeneticAlgorithm::Select()
 }
 
 
-//交叉
-inline void GeneticAlgorithm::Cross(vector<double> &child)
-{
-    vector<double> &f1 = Select();
-    vector<double> &f2 = Select();
-    for (auto i:x_group)
-    {
-        int r = Random_int(0, 1);
-        if (r == 0)
-        {
-            child[i] = f1[i];
-        }
-        else
-        {
-            child[i] = f2[i];
-        }
-    }
-
-}
-
-
-//变异
-inline void GeneticAlgorithm::Mutation(vector<double> &child)
-{
-    if(x_group.size()==1)
-    {
-        child[x_group[0]]=Random_double(x_min,x_max);
-        return;
-    }
-    vector<double> &fa = Select();
-    for (auto i:x_group)
-    {
-        if (Random_int(1, 2) == 1)
-        {
-            child[i] = Random_double(x_min, x_max);
-        }
-        else
-        {
-            child[i] = fa[i];
-        }
-    }
-}
-
-
-//复制
-inline void GeneticAlgorithm::Copy(vector<double> &child)
-{
-    vector<double> &father = Select();
-    copy(father.begin(), father.end(), child.begin());
-}
-
 
 //迭代进化
 inline void GeneticAlgorithm::Iterative_Evolution()
 {
-    vector <vector<double>> newPopulation(Population_size, vector<double>(Dimension));
-    copy(best_x.begin(), best_x.end(), newPopulation[0].begin());   //保留最优个体
-    for (int i = 1; i < Population_size; i++) {
-        double r = Random_double(0, 1);
-        if (r <= Mutation_rate)
-        {
-            Mutation(newPopulation[i]);
+    //新种群
+    vector <vector<double>> newPopulation(Population_size, vector<double>(Dimension));  
+    //保留上一代最优个体，避免种群退化
+    for(int i=0;i<10 && i<Dimension;++i)
+    {
+        copy(Population[index[i]].begin(),Population[index[i]].end(),newPopulation[i].begin());
+    }
+    for (int i = 10; i < Population_size; i++)
+    {
+        vector<double>& f1=Select();
+        vector<double>& f2=Select();
+        //以交叉概率进行交叉操作
+        if(Random_double(0,1)>Cross_rate){
+            copy(f1.begin(),f1.end(),newPopulation[i].begin());
+            goto jump;
         }
-        else if (r <= Cross_rate + Mutation_rate)
+        for(auto j:x_group)
         {
-            Cross(newPopulation[i]);
+            //交叉方法为多点交叉中的均匀交叉
+            if(Random_double(0,1)<0.5) 
+                newPopulation[i][j]=f1[j];
+            else
+                newPopulation[i][j]=f2[j];
         }
-        else
+        jump:
+        for(auto j:x_group)
         {
-            Copy(newPopulation[i]);
+            //printf("test%d %d\n",i,j);
+            if(Random_double(0,1)>Mutation_rate)
+                continue;
+            else
+            {
+                //高斯变异
+                double U1 = rand() * 1.0f / RAND_MAX; 
+                double U2 = rand() * 1.0f / RAND_MAX; 
+                double Z = sqrt(-2 * log(U1))*cos(2 * PI * U2);
+                newPopulation[i][j] =min((double)x_max,newPopulation[i][j] + 2*Z);
+                newPopulation[i][j] =max((double)x_min,newPopulation[i][j] + 2*Z);
+            } 
         }
     }
-    Population = newPopulation;
+    Population=newPopulation;
     ++Iteration_times;
 }
 
 
 //运行
-vector<double>  GeneticAlgorithm::Local_Solutions()
+vector<double>&  GeneticAlgorithm::Get_Solutions()
 {
     while (Iteration_times < Iteration_terminate_times)
     {
         Iterative_Evolution();
         Compute_fitness();
+        //printf("%d %lf\n",Iteration_times,best_fitness);
     }
-    return best_x;
-    //Print();
-}
-
-
-//输出结果
-void GeneticAlgorithm::Print()
-{
-    printf("final result:\n");
-    printf("best fitness:  %e\n", best_fitness);
-    printf("iteration times:  %d\n", Iteration_times);
-    printf("Polulation size:  %d\n", Population_size);
-    printf("Dimension:  %d\n", Dimension);
-    printf("best individual:\n");
-    for (int i = 0; i < Dimension; i++)
-    {
-        printf("%lf  ", best_x[i]);
-        if ((i + 1) % 20 == 0) printf("\n");
-    }
+    return Population[index[0]];//返回最优个体
 }
